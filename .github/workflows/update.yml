@@ -1,49 +1,45 @@
-name: Convert Sukka Ruleset to dae
+name: Convert Surge -> dae
 
 on:
+
+  workflow_dispatch:
+
   schedule:
-    - cron: '0 */6 * * *'   # 每 6 小时自动同步一次
-  workflow_dispatch:         # 允许手动触发
+    - cron: "0 0 */3 * *"
+
+permissions:
+  contents: write
 
 jobs:
+
   convert:
+
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
-      - name: Checkout your repo
-        uses: actions/checkout@v4
 
-      - name: Checkout SukkaLab/ruleset.skk.moe
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          repository: SukkaLab/ruleset.skk.moe
-          path: upstream
-          ref: master
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.12"
 
-      - name: Run conversion
+      - name: Run converter
         run: |
-          python3 .github/scripts/convert_to_dae.py upstream/List dae-output
+          python convert.py
 
-      - name: Move output to dae/
+      - name: Commit
         run: |
-          rm -rf dae/
-          mv dae-output dae
 
-      - name: Commit and push
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add dae/
-          if git diff --cached --quiet; then
-            echo "没有变更，无需提交"
-            exit 0
-          fi
-          git commit -m "chore: auto convert Sukka ruleset to dae [$(date -u +%Y-%m-%d-%H:%M UTC)]"
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+          git add output
+
+          git diff --cached --quiet && exit 0
+
+          git commit -m "Auto Convert"
+
           git push
