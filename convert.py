@@ -1,111 +1,289 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Convert SukkaLab/ruleset.skk.moe Surge rules
+to dae local rule files.
+
+Input:
+    ruleset.skk.moe/List/
+
+Output:
+    output/
+
+Supported:
+    DOMAIN
+    DOMAIN-SUFFIX
+    DOMAIN-KEYWORD
+    DOMAIN-WILDCARD
+    IP-CIDR
+    IP-CIDR6
+"""
 
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 
-REPO = "ruleset.skk.moe"
 
-if Path(REPO).exists():
-    shutil.rmtree(REPO)
+SOURCE_REPO = "https://github.com/SukkaLab/ruleset.skk.moe.git"
 
-subprocess.run([
-    "git",
-    "clone",
-    "--depth",
-    "1",
-    "https://github.com/SukkaLab/ruleset.skk.moe.git"
-], check=True)
+REPO_DIR = Path("ruleset.skk.moe")
+SOURCE_DIR = REPO_DIR / "List"
 
-SRC = Path(REPO) / "List"
-DST = Path("output") / "List"
+OUTPUT_DIR = Path("output")
 
-if DST.exists():
-    shutil.rmtree(DST)
 
-SUPPORTED = {
-    "DOMAIN",
-    "DOMAIN-SUFFIX",
-    "DOMAIN-KEYWORD",
-    "DOMAIN-WILDCARD",
-    "IP-CIDR",
-    "IP-CIDR6"
+SUPPORTED_SUFFIX = {
+    ".list",
+    ".conf",
+    ".txt",
 }
 
 
-def convert(line: str):
+def run(cmd):
+    subprocess.run(
+        cmd,
+        check=True,
+        stdout=subprocess.DEVNULL
+    )
+
+
+def clone_source():
+
+    if REPO_DIR.exists():
+        shutil.rmtree(REPO_DIR)
+
+    print("[+] Clone ruleset repository")
+
+    run([
+        "git",
+        "clone",
+        "--depth",
+        "1",
+        SOURCE_REPO,
+        str(REPO_DIR)
+    ])
+
+
+def clean_output():
+
+    if OUTPUT_DIR.exists():
+        shutil.rmtree(OUTPUT_DIR)
+
+    OUTPUT_DIR.mkdir()
+
+
+def convert_rule(line):
 
     line = line.strip()
 
     if not line:
         return None
 
+    # comments
     if line.startswith("#"):
         return None
 
     if line.startswith("//"):
         return None
 
-    parts = [x.strip() for x in line.split(",")]
+
+    # Surge format:
+    # TYPE,value
+
+    parts = [
+        x.strip()
+        for x in line.split(",")
+    ]
+
 
     if len(parts) < 2:
         return None
 
-    t = parts[0].upper()
+
+    rule_type = parts[0].upper()
     value = parts[1]
 
-    if t not in SUPPORTED:
-        return None
 
-    if t == "DOMAIN":
-        return f"domain(full:{value})"
+    if rule_type == "DOMAIN":
 
-    if t == "DOMAIN-SUFFIX":
-        return f"domain(suffix:{value})"
+        return (
+            f"full:{value}"
+        )
 
-    if t == "DOMAIN-KEYWORD":
-        return f"domain(keyword:{value})"
 
-    if t == "DOMAIN-WILDCARD":
-        return f"domain(regex:{value.replace('*','.*')})"
+    elif rule_type == "DOMAIN-SUFFIX":
 
-    if t == "IP-CIDR":
-        return f"ip({value})"
+        return (
+            f"suffix:{value}"
+        )
 
-    if t == "IP-CIDR6":
-        return f"ip({value})"
 
+    elif rule_type == "DOMAIN-KEYWORD":
+
+        return (
+            f"keyword:{value}"
+        )
+
+
+    elif rule_type == "DOMAIN-WILDCARD":
+
+        wildcard = (
+            value
+            .replace(".", r"\.")
+            .replace("*", ".*")
+        )
+
+        return (
+            f"regex:{wildcard}"
+        )
+
+
+    elif rule_type in (
+        "IP-CIDR",
+        "IP-CIDR6"
+    ):
+
+        return value
+
+
+    # unsupported:
     return None
 
 
-count_file = 0
-count_rule = 0
 
-for src in SRC.rglob("*"):
+def convert_file(src: Path):
 
-    if not src.is_file():
-        continue
+    relative = src.relative_to(
+        SOURCE_DIR
+    )
 
-    relative = src.relative_to(SRC)
 
-    dst = (DST / relative).with_suffix(".txt")
+    # keep directory tree
 
-    dst.parent.mkdir(parents=True, exist_ok=True)
+    dst = (
+        OUTPUT_DIR
+        /
+        relative
+    ).with_suffix(".dae")
 
-    count_file += 1
 
-    with open(src, encoding="utf-8") as fin, \
-         open(dst, "w", encoding="utf-8", newline="\n") as fout:
+    dst.parent.mkdir(
+        parents=True,
+        exist_ok=True
+    )
 
-        for line in fin:
 
-            newline = convert(line)
+    rules = set()
 
-            if newline:
+    ignored = 0
 
-                fout.write(newline + "\n")
 
-                count_rule += 1
+    with open(
+        src,
+        "r",
+        encoding="utf-8",
+        errors="ignore"
+    ) as f:
 
-print(f"Converted Files : {count_file}")
-print(f"Converted Rules : {count_rule}")
+        for line in f:
+
+            rule = convert_rule(line)
+
+            if rule:
+
+                rules.add(rule)
+
+            else:
+
+                ignored += 1
+
+
+    with open(
+        dst,
+        "w",
+        encoding="utf-8",
+        newline="\n"
+    ) as f:
+
+        for rule in sorted(rules):
+
+            f.write(
+                rule
+                +
+                "\n"
+            )
+
+
+    return (
+        len(rules),
+        ignored
+    )
+
+
+
+def main():
+
+    clone_source()
+
+    clean_output()
+
+
+    total_files = 0
+    total_rules = 0
+
+
+    for file in SOURCE_DIR.rglob("*"):
+
+        if not file.is_file():
+
+            continue
+
+
+        if file.suffix.lower() not in SUPPORTED_SUFFIX:
+
+            continue
+
+
+        total_files += 1
+
+
+        rules, ignored = convert_file(file)
+
+        total_rules += rules
+
+
+        print(
+            f"[OK] {file} "
+            f"rules={rules} "
+            f"ignored={ignored}"
+        )
+
+
+    print()
+    print("======================")
+    print(
+        f"Files : {total_files}"
+    )
+
+    print(
+        f"Rules : {total_rules}"
+    )
+
+    print("======================")
+
+
+if __name__ == "__main__":
+
+    try:
+        main()
+
+    except Exception as e:
+
+        print(
+            "[ERROR]",
+            e
+        )
+
+        sys.exit(1)
