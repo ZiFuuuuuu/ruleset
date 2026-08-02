@@ -1,44 +1,44 @@
-name: Convert Sukka rules to dae rules
+name: Convert Surge Rules to daed Format
 
 on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'List/**'
   schedule:
-    - cron: "0 0 */3 * *"
+    - cron: '0 3 */3 * *' # 每 3 天 UTC 3:00 自动运行
+  workflow_dispatch: # 支持手动触发
 
-  workflow_dispatch:
-
+permissions:
+  contents: write
+  actions: write # 删除历史运行记录所需的权限
 
 jobs:
-
   convert:
-
     runs-on: ubuntu-latest
-
-
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
 
+      - name: Run conversion script
+        run: python convert_to_dae.py
 
-    - name: Install Python
-      run: |
-        python -m pip install requests
+      - name: Commit and push converted rules
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "auto: update converted daed rulesets"
+          file_pattern: "daed_List/**"
+          branch: ${{ github.ref_name }}
 
-
-    - name: Convert rules
-      run: |
-        python convert.py
-
-
-    - name: Commit update
-      run: |
-
-        git config user.name github-actions
-
-        git config user.email actions@github.com
-
-        git add output
-
-        git commit -m "Update dae rules" || true
-
-        git push
+      - name: Delete old workflow runs (older than 15 days)
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          retain_days: 15
+          keep_minimum_runs: 3 # 保留最少的记录数量，避免全部删空
