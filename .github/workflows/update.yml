@@ -1,44 +1,49 @@
-name: Convert Surge Rules to daed Format
+name: Convert Sukka Ruleset to dae
 
 on:
-  push:
-    branches: [ main, master ]
-    paths:
-      - 'List/**'
   schedule:
-    - cron: '0 3 */3 * *' # 每 3 天 UTC 3:00 自动运行
-  workflow_dispatch: # 支持手动触发
-
-permissions:
-  contents: write
-  actions: write # 删除历史运行记录所需的权限
+    - cron: '0 */6 * * *'   # 每 6 小时自动同步一次
+  workflow_dispatch:         # 允许手动触发
 
 jobs:
   convert:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
-      - name: Checkout code
+      - name: Checkout your repo
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Checkout SukkaLab/ruleset.skk.moe
+        uses: actions/checkout@v4
+        with:
+          repository: SukkaLab/ruleset.skk.moe
+          path: upstream
+          ref: master
+
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.11'
 
-      - name: Run conversion script
-        run: python convert_to_dae.py
+      - name: Run conversion
+        run: |
+          python3 .github/scripts/convert_to_dae.py upstream/List dae-output
 
-      - name: Commit and push converted rules
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "auto: update converted daed rulesets"
-          file_pattern: "daed_List/**"
-          branch: ${{ github.ref_name }}
+      - name: Move output to dae/
+        run: |
+          rm -rf dae/
+          mv dae-output dae
 
-      - name: Delete old workflow runs (older than 15 days)
-        uses: Mattraks/delete-workflow-runs@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          retain_days: 15
-          keep_minimum_runs: 3 # 保留最少的记录数量，避免全部删空
+      - name: Commit and push
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add dae/
+          if git diff --cached --quiet; then
+            echo "没有变更，无需提交"
+            exit 0
+          fi
+          git commit -m "chore: auto convert Sukka ruleset to dae [$(date -u +%Y-%m-%d-%H:%M UTC)]"
+          git push
