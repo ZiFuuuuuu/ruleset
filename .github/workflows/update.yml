@@ -1,14 +1,18 @@
-name: Convert Surge -> dae
+name: Convert Sukka Surge Rules to dae
 
 on:
 
+  # 手动运行
   workflow_dispatch:
 
+  # 每3天运行一次
   schedule:
-    - cron: "0 0 */3 * *"
+    - cron: "0 3 */3 * *"
+
 
 permissions:
   contents: write
+
 
 jobs:
 
@@ -16,30 +20,61 @@ jobs:
 
     runs-on: ubuntu-latest
 
+
     steps:
 
-      - name: Checkout
+
+      # 拉取当前仓库
+      - name: Checkout repository
         uses: actions/checkout@v4
 
+
+
+      # Python环境
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Run converter
+
+
+      # 执行转换
+      - name: Convert rules
         run: |
-          python convert.py
 
-      - name: Commit
+          python3 convert.py
+
+
+
+      # 提交变化
+      - name: Commit changes
         run: |
 
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config user.name \
+            "github-actions[bot]"
 
-          git add output
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git diff --cached --quiet && exit 0
 
-          git commit -m "Auto Convert"
+          git add output/
+
+
+          if git diff \
+             --cached \
+             --quiet;
+
+          then
+
+              echo "No changes"
+
+              exit 0
+
+          fi
+
+
+          git commit \
+            -m "Auto update dae rules"
+
 
           git push
