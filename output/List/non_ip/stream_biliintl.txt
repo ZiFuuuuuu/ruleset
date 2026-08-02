@@ -1,0 +1,6 @@
+domain(full:this_ruleset_is_made_by_sukkaw.ruleset.skk.moe)
+domain(suffix:bilibili.tv)
+domain(suffix:biliintl.com)
+domain(full:apm-misaka.biliapi.net)
+domain(full:upos-bstar-mirrorakam.akamaized.net)
+domain(full:upos-bstar1-mirrorakam.akamaized.net)
