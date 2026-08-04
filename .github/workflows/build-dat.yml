@@ -1,4 +1,4 @@
-workflow_yml = '''name: Build DAT for dae
+name: Build DAT for dae
 
 on:
   push:
@@ -60,11 +60,11 @@ jobs:
           name: Sukka Rules for dae (latest)
           body: |
             自动构建的 SukkaW/Surge 规则 DAT 文件，适用于 [dae](https://github.com/daeuniverse/dae)。
-            
+
             **包含规则：**
             - `sukka-domain.dat` — 域名规则（来自 domainset + non_ip）
             - `sukka-ip.dat` — IP 规则（来自 ip）
-            
+
             **使用方法：**
             ```dae
             domain(ext:"sukka-domain.dat:apple_cdn") -> direct
@@ -74,6 +74,3 @@ jobs:
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-'''
-
-(out_dir / 'build-dat.yml').write_text(workflow_yml, encoding='utf-8')
