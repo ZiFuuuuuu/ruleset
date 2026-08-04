@@ -12,88 +12,14 @@
 import sys
 import json
 import re
+import shutil
 import ipaddress
 import urllib.request
 import urllib.error
 from pathlib import Path
 
 BASE_URL = "https://ruleset.skk.moe/List"
-
-# 需要下载并转换的规则文件列表（按需增删）
-DOMAINSET_FILES = [
-    "apple_cdn.conf",
-    "cdn.conf",
-    "download.conf",
-    "game-download.conf",
-    "icloud_private_relay.conf",
-    "reject.conf",
-    "reject_extra.conf",
-    "reject_phishing.conf",
-    "reject_sukka.conf",
-    "speedtest.conf",
-]
-
-NON_IP_FILES = [
-    "ai.conf",
-    "apple_cdn.conf",
-    "apple_cn.conf",
-    "apple_intelligence.conf",
-    "apple_services.conf",
-    "cdn.conf",
-    "direct.conf",
-    "domestic.conf",
-    "download.conf",
-    "global.conf",
-    "global_plus.conf",
-    "gitlab.conf",
-    "lan.conf",
-    "microsoft_cdn.conf",
-    "microsoft.conf",
-    "my_direct.conf",
-    "my_git.conf",
-    "my_plus.conf",
-    "my_proxy.conf",
-    "my_reject.conf",
-    "my_tw.conf",
-    "my_us.conf",
-    "neteasemusic.conf",
-    "reject.conf",
-    "reject-drop.conf",
-    "reject-no-drop.conf",
-    "reject-url-regex.conf",
-    "sogouinput.conf",
-    "stream.conf",
-    "stream_biliintl.conf",
-    "stream_eu.conf",
-    "stream_hk.conf",
-    "stream_jp.conf",
-    "stream_kr.conf",
-    "stream_tw.conf",
-    "stream_us.conf",
-    "telegram.conf",
-]
-
-IP_FILES = [
-    "ai.conf",
-    "apple_services.conf",
-    "cdn.conf",
-    "china_ip.conf",
-    "china_ip_ipv6.conf",
-    "domestic.conf",
-    "download.conf",
-    "lan.conf",
-    "neteasemusic.conf",
-    "reject.conf",
-    "stream.conf",
-    "stream_biliintl.conf",
-    "stream_eu.conf",
-    "stream_hk.conf",
-    "stream_jp.conf",
-    "stream_kr.conf",
-    "stream_tw.conf",
-    "stream_us.conf",
-    "telegram.conf",
-]
+GITHUB_API = "https://api.github.com/repos/SukkaW/Surge/contents/List"
 
 # SukkaW 的水印域名，domain-list-community 会拒绝（含下划线）
 WATERMARKS = [
@@ -157,6 +83,27 @@ def download(url: str) -> str:
     })
     with urllib.request.urlopen(req, timeout=30) as resp:
         return resp.read().decode("utf-8")
+
+
+def list_remote_files(category: str) -> list:
+    """
+    通过 GitHub API 获取 SukkaW/Surge 仓库 List/{category} 目录下的 .conf 文件列表。
+    若 API 限率或网络失败，返回空列表，由调用方回退到硬编码列表。
+    """
+    api_url = f"{GITHUB_API}/{category}"
+    try:
+        req = urllib.request.Request(api_url, headers={
+            "User-Agent": "Mozilla/5.0 (compatible; dae-ruleset-builder/1.0)",
+            "Accept": "application/vnd.github.v3+json"
+        })
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            files = [item["name"] for item in data
+                     if item.get("type") == "file" and item["name"].endswith(".conf")]
+            return sorted(files)
+    except Exception as e:
+        print(f"[警告] 无法从 GitHub API 获取 {category} 文件列表: {e}")
+        return []
 
 
 def wildcard_to_regex(pattern: str) -> str:
@@ -374,6 +321,9 @@ def fetch_and_convert(category: str, files: list, converter, out_subdir: Path):
 
 def main():
     out = Path("data")
+    # 每次运行前清空 data 目录，避免历史 commit 的数据累积导致重复
+    if out.exists():
+        shutil.rmtree(out)
     out.mkdir(exist_ok=True)
     (out / "domains").mkdir(exist_ok=True)
     (out / "ips").mkdir(exist_ok=True)
@@ -381,9 +331,51 @@ def main():
     print(f"规则源: {BASE_URL}")
     print("=" * 50)
 
-    fetch_and_convert("domainset", DOMAINSET_FILES, convert_domainset, out / "domains")
-    fetch_and_convert("non_ip", NON_IP_FILES, convert_non_ip, out / "domains")
-    fetch_and_convert("ip", IP_FILES, convert_ip, out / "ips")
+    # 自动从 GitHub API 获取文件列表；若失败则使用硬编码回退
+    domainset_files = list_remote_files("domainset")
+    non_ip_files = list_remote_files("non_ip")
+    ip_files = list_remote_files("ip")
+
+    # 回退列表（基于 2026-08-04 的完整目录）
+    if not domainset_files:
+        domainset_files = [
+            "apple_cdn.conf", "cdn.conf", "download.conf", "game-download.conf",
+            "icloud_private_relay.conf", "reject.conf", "reject_extra.conf",
+            "reject_phishing.conf", "reject_sukka.conf", "speedtest.conf",
+        ]
+        print("[回退] 使用硬编码 domainset 文件列表")
+    if not non_ip_files:
+        non_ip_files = [
+            "ai.conf", "apple_cdn.conf", "apple_cn.conf", "apple_intelligence.conf",
+            "apple_services.conf", "cdn.conf", "cloudmounter.conf", "direct.conf",
+            "domestic.conf", "download.conf", "gitlab.conf", "global.conf",
+            "global_plus.conf", "lan.conf", "microsoft.conf", "microsoft_cdn.conf",
+            "my_direct.conf", "my_git.conf", "my_plus.conf", "my_proxy.conf",
+            "my_reject.conf", "my_tw.conf", "my_us.conf", "neteasemusic.conf",
+            "reject-drop.conf", "reject-no-drop.conf", "reject-url-regex.conf",
+            "reject.conf", "sogouinput.conf", "stream.conf", "stream_biliintl.conf",
+            "stream_eu.conf", "stream_hk.conf", "stream_jp.conf", "stream_kr.conf",
+            "stream_tw.conf", "stream_us.conf", "telegram.conf",
+        ]
+        print("[回退] 使用硬编码 non_ip 文件列表")
+    if not ip_files:
+        ip_files = [
+            "ai.conf", "apple_services.conf", "cdn.conf", "china_ip.conf",
+            "china_ip_ipv6.conf", "domestic.conf", "download.conf", "lan.conf",
+            "neteasemusic.conf", "reject.conf", "stream.conf", "stream_biliintl.conf",
+            "stream_eu.conf", "stream_hk.conf", "stream_jp.conf", "stream_kr.conf",
+            "stream_tw.conf", "stream_us.conf", "telegram.conf", "telegram_asn.conf",
+        ]
+        print("[回退] 使用硬编码 ip 文件列表")
+
+    print(f"[domainset] 发现 {len(domainset_files)} 个文件")
+    print(f"[non_ip]    发现 {len(non_ip_files)} 个文件")
+    print(f"[ip]        发现 {len(ip_files)} 个文件")
+    print("=" * 50)
+
+    fetch_and_convert("domainset", domainset_files, convert_domainset, out / "domains")
+    fetch_and_convert("non_ip", non_ip_files, convert_non_ip, out / "domains")
+    fetch_and_convert("ip", ip_files, convert_ip, out / "ips")
 
     config = generate_geoip_config(out / "ips")
     (out / "geoip-config.json").write_text(
