@@ -5,7 +5,7 @@
       "action": "add",
       "args": {
         "name": "ai",
-        "uri": "/home/runner/work/srs_ruleset/srs_ruleset/data/ips/ai.txt"
+        "uri": "/home/runner/work/ruleset/ruleset/data/ips/ai.txt"
       }
     },
     {
@@ -13,7 +13,7 @@
       "action": "add",
       "args": {
         "name": "apple-services",
-        "uri": "/home/runner/work/srs_ruleset/srs_ruleset/data/ips/apple-services.txt"
+        "uri": "/home/runner/work/ruleset/ruleset/data/ips/apple-services.txt"
       }
     },
     {
@@ -21,7 +21,7 @@
       "action": "add",
       "args": {
         "name": "cdn",
-        "uri": "/home/runner/work/srs_ruleset/srs_ruleset/data/ips/cdn.txt"
+        "uri": "/home/runner/work/ruleset/ruleset/data/ips/cdn.txt"
       }
     },
     {
@@ -29,7 +29,7 @@
       "action": "add",
       "args": {
         "name": "china-ip-ipv6",
-        "uri": "/home/runner/work/srs_ruleset/srs_ruleset/data/ips/china-ip-ipv6.txt"
+        "uri": "/home/runner/work/ruleset/ruleset/data/ips/china-ip-ipv6.txt"
       }
     },
     {
@@ -37,7 +37,7 @@
       "action": "add",
       "args": {
         "name": "china-ip",
-        "uri": "/home/runner/work/srs_ruleset/srs_ruleset/data/ips/china-ip.txt"
+        "uri": "/home/runner/work/ruleset/ruleset/data/ips/china-ip.txt"
       }
     },
     {
@@ -45,7 +45,7 @@
       "action": "add",
       "args": {
         "name": "domestic",
-        "uri": "/home/runner/work/srs_ruleset/srs_ruleset/data/ips/domestic.txt"
+        "uri": "/home/runner/work/ruleset/ruleset/data/ips/domestic.txt"
       }
     },
     {
@@ -53,7 +53,7 @@
       "action": "add",
       "args": {
         "name": "download",
-        "uri": "/home/runner/work/srs_ruleset/srs_ruleset/data/ips/download.txt"
+        "uri": "/home/runner/work/ruleset/ruleset/data/ips/download.txt"
       }
     },
     {
@@ -61,7 +61,7 @@
       "action": "add",
       "args": {
         "name": "lan",
-        "uri": "/home/runner/work/srs_ruleset/srs_ruleset/data/ips/lan.txt"
+        "uri": "/home/runner/work/ruleset/ruleset/data/ips/lan.txt"
       }
     },
     {
@@ -69,7 +69,7 @@
       "action": "add",
       "args": {
         "name": "neteasemusic",
-        "uri": "/home/runner/work/srs_ruleset/srs_ruleset/data/ips/neteasemusic.txt"
+        "uri": "/home/runner/work/ruleset/ruleset/data/ips/neteasemusic.txt"
       }
     },
     {
@@ -77,7 +77,7 @@
       "action": "add",
       "args": {
         "name": "reject",
-        "uri": "/home/runner/work/srs_ruleset/srs_ruleset/data/ips/reject.txt"
+        "uri": "/home/runner/work/ruleset/ruleset/data/ips/reject.txt"
       }
     },
     {
@@ -85,7 +85,7 @@
       "action": "add",
       "args": {
         "name": "stream",
-        "uri": "/home/runner/work/srs_ruleset/srs_ruleset/data/ips/stream.txt"
+        "uri": "/home/runner/work/ruleset/ruleset/data/ips/stream.txt"
       }
     },
     {
@@ -93,7 +93,7 @@
       "action": "add",
       "args": {
         "name": "telegram",
-        "uri": "/home/runner/work/srs_ruleset/srs_ruleset/data/ips/telegram.txt"
+        "uri": "/home/runner/work/ruleset/ruleset/data/ips/telegram.txt"
       }
     }
   ],
