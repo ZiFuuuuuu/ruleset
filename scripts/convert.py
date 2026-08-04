@@ -12,6 +12,7 @@
 import sys
 import json
 import re
+import ipaddress
 import urllib.request
 import urllib.error
 from pathlib import Path
@@ -239,16 +240,53 @@ def convert_non_ip(content: str, filename: str):
 
 
 def convert_ip(content: str) -> str:
-    """提取 IP-CIDR / IP-CIDR6 为纯 CIDR 列表"""
+    """提取 IP-CIDR / IP-CIDR6 为纯 CIDR 列表，跳过 no-resolve 等后缀"""
     lines = []
+    dropped = []
+    invalid = 0
     for line in content.strip().split("\n"):
         line = line.strip()
         if not line or line.startswith("#"):
             continue
+
+        # 跳过水印域名
+        if line.startswith("DOMAIN,"):
+            continue
+
+        cidr = None
         if line.startswith("IP-CIDR,"):
-            lines.append(line[8:].strip())
+            # 取逗号分隔后的第二部分（CIDR），忽略 no-resolve 等后续参数
+            parts = line.split(",")
+            if len(parts) >= 2:
+                cidr = parts[1].strip()
         elif line.startswith("IP-CIDR6,"):
-            lines.append(line[9:].strip())
+            parts = line.split(",")
+            if len(parts) >= 2:
+                cidr = parts[1].strip()
+
+        if cidr:
+            # 校验 CIDR 格式合法性
+            try:
+                ipaddress.ip_network(cidr, strict=False)
+                lines.append(cidr)
+            except ValueError:
+                invalid += 1
+                dropped.append(line)
+        elif line.startswith("IP-ASN,"):
+            dropped.append(line)
+        elif not line.startswith("DOMAIN,"):
+            dropped.append(line)
+
+    if dropped:
+        total_dropped = len(dropped)
+        print(f"  [ip] 跳过 {total_dropped} 条不支持的规则")
+        for d in dropped[:5]:
+            print(f"    - {d}")
+        if total_dropped > 5:
+            print(f"    ... 还有 {total_dropped - 5} 条")
+    if invalid:
+        print(f"  [ip] 过滤 {invalid} 条非法 CIDR")
+
     return "\n".join(lines)
 
 
