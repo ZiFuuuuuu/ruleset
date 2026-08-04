@@ -109,6 +109,25 @@ def download(url: str) -> str:
         return resp.read().decode("utf-8")
 
 
+def wildcard_to_regex(pattern: str) -> str:
+    """
+    将 Surge DOMAIN-WILDCARD 转换为正则表达式。
+    Surge 通配符语义：* 匹配任意字符序列，? 匹配单个字符。
+    使用 re.escape 安全处理其他字符，避免正则元字符冲突。
+    """
+    # 用占位符保护通配符，防止被 re.escape 转义
+    ph_star = "\x00STAR\x00"
+    ph_qmark = "\x00QMARK\x00"
+    temp = pattern.replace("*", ph_star).replace("?", ph_qmark)
+    temp = re.escape(temp)
+    temp = temp.replace(ph_star, ".*").replace(ph_qmark, ".")
+    if not temp.startswith("^"):
+        temp = "^" + temp
+    if not temp.endswith("$"):
+        temp = temp + "$"
+    return temp
+
+
 def convert_domainset(content: str) -> str:
     """domainset 是纯域名列表，.example.com 表示 suffix"""
     lines = []
@@ -160,12 +179,14 @@ def convert_non_ip(content: str, filename: str):
 
         elif line.startswith("DOMAIN-WILDCARD,"):
             pattern = line[16:].strip()
-            regex = pattern.replace(".", r"\.").replace("*", ".*")
-            if not regex.startswith("^"):
-                regex = "^" + regex
-            if not regex.endswith("$"):
-                regex = regex + "$"
-            lines.append(f"regexp:{regex}")
+            regex = wildcard_to_regex(pattern)
+            # 校验生成的正则是否合法
+            try:
+                re.compile(regex)
+                lines.append(f"regexp:{regex}")
+            except re.error as e:
+                print(f"  [{filename}] 跳过非法正则: {regex} ({e})")
+                dropped.append(line)
 
         elif line.startswith("IP-CIDR,") or line.startswith("IP-CIDR6,"):
             dropped.append(line)
