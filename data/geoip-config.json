@@ -4,6 +4,38 @@
       "type": "text",
       "action": "add",
       "args": {
+        "name": "ai",
+        "uri": "/home/runner/work/srs_ruleset/srs_ruleset/data/ips/ai.txt"
+      }
+    },
+    {
+      "type": "text",
+      "action": "add",
+      "args": {
+        "name": "apple-services",
+        "uri": "/home/runner/work/srs_ruleset/srs_ruleset/data/ips/apple-services.txt"
+      }
+    },
+    {
+      "type": "text",
+      "action": "add",
+      "args": {
+        "name": "cdn",
+        "uri": "/home/runner/work/srs_ruleset/srs_ruleset/data/ips/cdn.txt"
+      }
+    },
+    {
+      "type": "text",
+      "action": "add",
+      "args": {
+        "name": "china-ip-ipv6",
+        "uri": "/home/runner/work/srs_ruleset/srs_ruleset/data/ips/china-ip-ipv6.txt"
+      }
+    },
+    {
+      "type": "text",
+      "action": "add",
+      "args": {
         "name": "china-ip",
         "uri": "/home/runner/work/srs_ruleset/srs_ruleset/data/ips/china-ip.txt"
       }
@@ -20,8 +52,24 @@
       "type": "text",
       "action": "add",
       "args": {
+        "name": "download",
+        "uri": "/home/runner/work/srs_ruleset/srs_ruleset/data/ips/download.txt"
+      }
+    },
+    {
+      "type": "text",
+      "action": "add",
+      "args": {
         "name": "lan",
         "uri": "/home/runner/work/srs_ruleset/srs_ruleset/data/ips/lan.txt"
+      }
+    },
+    {
+      "type": "text",
+      "action": "add",
+      "args": {
+        "name": "neteasemusic",
+        "uri": "/home/runner/work/srs_ruleset/srs_ruleset/data/ips/neteasemusic.txt"
       }
     },
     {
