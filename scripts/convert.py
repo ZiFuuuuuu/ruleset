@@ -1,17 +1,84 @@
 #!/usr/bin/env python3
 """
-将 SukkaW/Surge List 规则转换为 dae 可用的 DAT 构建源文件
+从 ruleset.skk.moe 下载 SukkaW Surge List 规则并转换为 dae 可用的 DAT 构建源文件
 支持：
   - List/domainset/*.conf   -> domain-list-community (domain/suffix)
   - List/non_ip/*.conf      -> domain-list-community (domain/suffix/keyword/regexp)
   - List/ip/*.conf          -> geoip text (CIDR 列表)
 
 不支持的规则类型（自动跳过并记录）：
-  PROCESS-NAME, USER-AGENT, URL-REGEX, DOMAIN-SET, IP-CIDR(出现在 non_ip 中)
+  PROCESS-NAME, USER-AGENT, URL-REGEX, DOMAIN-SET, AND, OR, NOT
 """
 import sys
 import json
+import urllib.request
+import urllib.error
 from pathlib import Path
+
+BASE_URL = "https://ruleset.skk.moe/List"
+
+# 需要下载并转换的规则文件列表
+# 你可以根据需要增删
+DOMAINSET_FILES = [
+    "apple_cdn.conf",
+    "cdn.conf",
+    "download.conf",
+    "icloud_private_relay.conf",
+    "reject.conf",
+    "reject_extra.conf",
+    "reject_phishing.conf",
+    "speedtest.conf",
+]
+
+NON_IP_FILES = [
+    "ai.conf",
+    "apple_cdn.conf",
+    "apple_cn.conf",
+    "apple_services.conf",
+    "cdn.conf",
+    "direct.conf",
+    "domestic.conf",
+    "download.conf",
+    "global.conf",
+    "lan.conf",
+    "microsoft_cdn.conf",
+    "microsoft.conf",
+    "reject.conf",
+    "reject-drop.conf",
+    "reject-no-drop.conf",
+    "stream.conf",
+    "stream_eu.conf",
+    "stream_hk.conf",
+    "stream_jp.conf",
+    "stream_kr.conf",
+    "stream_tw.conf",
+    "stream_us.conf",
+    "telegram.conf",
+]
+
+IP_FILES = [
+    "china_ip.conf",
+    "domestic.conf",
+    "lan.conf",
+    "reject.conf",
+    "stream.conf",
+    "stream_eu.conf",
+    "stream_hk.conf",
+    "stream_jp.conf",
+    "stream_kr.conf",
+    "stream_tw.conf",
+    "stream_us.conf",
+    "telegram.conf",
+]
+
+
+def download(url: str) -> str:
+    """下载文本内容"""
+    req = urllib.request.Request(url, headers={
+        "User-Agent": "Mozilla/5.0 (compatible; dae-ruleset-builder/1.0)"
+    })
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        return resp.read().decode("utf-8")
 
 
 def convert_domainset(content: str) -> str:
@@ -48,7 +115,6 @@ def convert_non_ip(content: str, filename: str):
 
         elif line.startswith("DOMAIN-WILDCARD,"):
             pattern = line[16:].strip()
-            # 转义点号，将 * 替换为 .*，并添加锚点
             regex = pattern.replace(".", r"\.").replace("*", ".*")
             if not regex.startswith("^"):
                 regex = "^" + regex
@@ -57,11 +123,9 @@ def convert_non_ip(content: str, filename: str):
             lines.append(f"regexp:{regex}")
 
         elif line.startswith("IP-CIDR,") or line.startswith("IP-CIDR6,"):
-            # non_ip 中偶尔混有 IP 规则，建议归入 ip 文件夹；这里记录并跳过
             dropped.append(line)
 
         else:
-            # 包括 PROCESS-NAME, USER-AGENT, URL-REGEX, DOMAIN-SET, AND, OR, NOT 等
             dropped.append(line)
 
     if dropped:
@@ -115,53 +179,51 @@ def generate_geoip_config(ip_dir: Path) -> dict:
     }
 
 
-def main():
-    surge = Path("SukkaW-Surge/List")
-    if not surge.exists():
-        print("错误: 未找到 SukkaW-Surge/List 目录，请先 clone SukkaW/Surge")
-        sys.exit(1)
+def fetch_and_convert(category: str, files: list, converter, out_subdir: Path):
+    """批量下载并转换"""
+    for fname in files:
+        url = f"{BASE_URL}/{category}/{fname}"
+        tag = Path(fname).stem
+        try:
+            content = download(url)
+        except urllib.error.HTTPError as e:
+            if e.code == 404:
+                print(f"[跳过] {url} (404)")
+                continue
+            raise
 
+        result = converter(content, tag) if category == "non_ip" else converter(content)
+        if not result:
+            print(f"[空]   {fname} -> 无可转换规则")
+            continue
+
+        if category == "ip":
+            out_path = out_subdir / f"{tag}.txt"
+        else:
+            out_path = out_subdir / tag
+
+        out_path.write_text(result, encoding="utf-8")
+        print(f"[{category:9s}] {fname} -> {out_path.name} ({len(result.splitlines())} 条)")
+
+
+def main():
     out = Path("data")
     out.mkdir(exist_ok=True)
     (out / "domains").mkdir(exist_ok=True)
     (out / "ips").mkdir(exist_ok=True)
 
-    # --- domainset ---
-    domainset_dir = surge / "domainset"
-    if domainset_dir.exists():
-        for f in sorted(domainset_dir.glob("*.conf")):
-            tag = f.stem
-            content = convert_domainset(f.read_text(encoding="utf-8"))
-            (out / "domains" / tag).write_text(content, encoding="utf-8")
-            print(f"[domainset] {f.name} -> domains/{tag} ({len(content.splitlines())} 条)")
+    print(f"规则源: {BASE_URL}")
+    print("=" * 50)
 
-    # --- non_ip ---
-    non_ip_dir = surge / "non_ip"
-    if non_ip_dir.exists():
-        for f in sorted(non_ip_dir.glob("*.conf")):
-            tag = f.stem
-            content = convert_non_ip(f.read_text(encoding="utf-8"), f.name)
-            if content:
-                (out / "domains" / tag).write_text(content, encoding="utf-8")
-                print(f"[non_ip]    {f.name} -> domains/{tag} ({len(content.splitlines())} 条)")
-            else:
-                print(f"[non_ip]    {f.name} -> 无可转换规则，已跳过")
+    fetch_and_convert("domainset", DOMAINSET_FILES, convert_domainset, out / "domains")
+    fetch_and_convert("non_ip", NON_IP_FILES, convert_non_ip, out / "domains")
+    fetch_and_convert("ip", IP_FILES, convert_ip, out / "ips")
 
-    # --- ip ---
-    ip_dir = surge / "ip"
-    if ip_dir.exists():
-        for f in sorted(ip_dir.glob("*.conf")):
-            tag = f.stem
-            content = convert_ip(f.read_text(encoding="utf-8"))
-            if content:
-                (out / "ips" / f"{tag}.txt").write_text(content, encoding="utf-8")
-                print(f"[ip]        {f.name} -> ips/{tag}.txt ({len(content.splitlines())} 条)")
-            else:
-                print(f"[ip]        {f.name} -> 无 IP 规则，已跳过")
-
-    # --- geoip config ---
+    # 生成 geoip 配置
     config = generate_geoip_config(out / "ips")
-    (out / "geoip-config.json").write_text(json.dumps(config, indent=2, ensure_ascii=False), encoding="utf-8")
+    (out / "geoip-config.json").write_text(
+        json.dumps(config, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
     print(f"[geoip]     已生成 geoip-config.json ({len(config['input'])} 个 IP 集合)")
 
     print("\n转换完成，输出目录: data/")
