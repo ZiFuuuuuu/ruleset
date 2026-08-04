@@ -4,15 +4,20 @@ on:
   push:
     branches: [main, master]
   schedule:
-    - cron: '0 4 * * *'   # 每天北京时间 12:00 同步一次
+    - cron: '0 4 * * *'
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    # 防止 bot 提交的 [skip ci] 触发无限循环
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # 需要写权限来 push
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Go
         uses: actions/setup-go@v5
@@ -28,6 +33,15 @@ jobs:
           wc -l data/domains/*
           echo "--- IP 集合统计 ---"
           wc -l data/ips/*
+
+      - name: Commit converted data to repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          # 只有真有变化时才提交，避免空 commit
+          git diff --cached --quiet || git commit -m "chore: update converted rules data [skip ci]"
+          git push
 
       - name: Build Domain DAT
         run: |
@@ -65,8 +79,8 @@ jobs:
 
             **使用方法：**
             ```dae
-            domain(ext:"sukka-domain.dat:apple_cdn") -> direct
-            dip(ext:"sukka-ip.dat:china_ip") -> direct
+            domain(ext:"sukka-domain.dat:apple-cdn") -> direct
+            dip(ext:"sukka-ip.dat:china-ip") -> direct
             ```
           files: dist/*
           make_latest: true
