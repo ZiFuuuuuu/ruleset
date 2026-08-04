@@ -19,7 +19,6 @@ import urllib.error
 from pathlib import Path
 
 BASE_URL = "https://ruleset.skk.moe/List"
-GITHUB_API = "https://api.github.com/repos/SukkaW/Surge/contents/List"
 
 # SukkaW 的水印域名，domain-list-community 会拒绝（含下划线）
 WATERMARKS = [
@@ -87,22 +86,18 @@ def download(url: str) -> str:
 
 def list_remote_files(category: str) -> list:
     """
-    通过 GitHub API 获取 SukkaW/Surge 仓库 List/{category} 目录下的 .conf 文件列表。
-    若 API 限率或网络失败，返回空列表，由调用方回退到硬编码列表。
+    通过抓取 ruleset.skk.moe/List/{category}/ 目录页 HTML，
+    提取所有 .conf 文件列表。Cloudflare Pages 会自动生成目录索引。
     """
-    api_url = f"{GITHUB_API}/{category}"
+    index_url = f"{BASE_URL}/{category}/"
     try:
-        req = urllib.request.Request(api_url, headers={
-            "User-Agent": "Mozilla/5.0 (compatible; dae-ruleset-builder/1.0)",
-            "Accept": "application/vnd.github.v3+json"
-        })
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-            files = [item["name"] for item in data
-                     if item.get("type") == "file" and item["name"].endswith(".conf")]
-            return sorted(files)
+        html = download(index_url)
+        # 匹配目录索引中的 .conf 文件链接
+        files = re.findall(r'href="([^"]+\.conf)"', html)
+        # 去重并排序
+        return sorted(list(set(files)))
     except Exception as e:
-        print(f"[警告] 无法从 GitHub API 获取 {category} 文件列表: {e}")
+        print(f"[警告] 无法从 {index_url} 获取文件列表: {e}")
         return []
 
 
@@ -331,7 +326,7 @@ def main():
     print(f"规则源: {BASE_URL}")
     print("=" * 50)
 
-    # 自动从 GitHub API 获取文件列表；若失败则使用硬编码回退
+    # 从 ruleset.skk.moe 网站目录页自动抓取文件列表
     domainset_files = list_remote_files("domainset")
     non_ip_files = list_remote_files("non_ip")
     ip_files = list_remote_files("ip")
