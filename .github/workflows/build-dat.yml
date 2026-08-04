@@ -1,0 +1,103 @@
+name: Build dae v2ray dat
+
+
+on:
+
+  schedule:
+
+    - cron: "0 3 */3 * *"
+
+  workflow_dispatch:
+
+
+
+permissions:
+
+  contents: write
+
+
+
+jobs:
+
+
+  build:
+
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+
+
+    - uses: actions/checkout@v4
+
+
+
+    - name: Download Sukka ruleset
+
+      uses: actions/checkout@v4
+
+      with:
+
+        repository: SukkaLab/ruleset.skk.moe
+
+        path: ruleset
+
+
+
+    - name: Install Go
+
+      uses: actions/setup-go@v5
+
+      with:
+
+        go-version: stable
+
+
+
+    - name: Build geosite
+
+      run: |
+
+
+        git clone \
+        https://github.com/v2fly/domain-list-community.git
+
+
+        python3 scripts/convert_sukka.py
+
+
+        cd domain-list-community
+
+        make
+
+
+
+    - name: Build geoip
+
+      run: |
+
+
+        git clone \
+        https://github.com/v2fly/geoip.git
+
+
+        cd geoip
+
+        make
+
+
+
+    - name: Release
+
+      uses: softprops/action-gh-release@v2
+
+      with:
+
+        tag_name: latest
+
+        files: |
+
+          domain-list-community/geosite.dat
+
+          geoip/geoip.dat
