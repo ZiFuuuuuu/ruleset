@@ -164,9 +164,11 @@ def convert_domainset(content: str) -> str:
         if line.startswith("."):
             domain = line[1:]
             if is_valid_domain(domain):
+                # domain-list-community 中 domain: 表示 suffix 匹配
                 lines.append(f"domain:{domain}")
         else:
             if is_valid_domain(line):
+                # domain-list-community 中 full: 表示完整域名匹配
                 lines.append(f"full:{line}")
     return "\n".join(lines)
 
@@ -184,6 +186,7 @@ def convert_non_ip(content: str, filename: str):
         if line.startswith("DOMAIN,"):
             domain = line[7:].strip()
             if is_valid_domain(domain):
+                # 完整域名匹配 -> full:
                 lines.append(f"full:{domain}")
             else:
                 invalid += 1
@@ -191,6 +194,7 @@ def convert_non_ip(content: str, filename: str):
         elif line.startswith("DOMAIN-SUFFIX,"):
             domain = line[14:].strip()
             if is_valid_domain(domain):
+                # 后缀匹配 -> domain:（domain-list-community 的 domain: 就是 suffix 语义）
                 lines.append(f"domain:{domain}")
             else:
                 invalid += 1
@@ -262,16 +266,19 @@ def generate_geoip_config(ip_dir: Path) -> dict:
             }
         })
 
+    # v2fly/geoip 的 output 必须是数组
     return {
         "input": inputs,
-        "output": {
-            "type": "v2rayGeoIPDat",
-            "action": "output",
-            "args": {
-                "outputName": "sukka-ip.dat",
-                "outputDir": "./"
+        "output": [
+            {
+                "type": "v2rayGeoIPDat",
+                "action": "output",
+                "args": {
+                    "outputName": "sukka-ip.dat",
+                    "outputDir": "./"
+                }
             }
-        }
+        ]
     }
 
 
