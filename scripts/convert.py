@@ -86,18 +86,52 @@ def download(url: str) -> str:
 
 def list_remote_files(category: str) -> list:
     """
-    通过抓取 ruleset.skk.moe/List/{category}/ 目录页 HTML，
-    提取所有 .conf 文件列表。Cloudflare Pages 会自动生成目录索引。
+    从 ruleset.skk.moe 根页面解析目录结构，提取指定分类下的 .conf 文件列表。
+    页面中 List 区域包含 domainset / non_ip / ip 三个子目录的文件清单。
     """
-    index_url = f"{BASE_URL}/{category}/"
     try:
-        html = download(index_url)
-        # 匹配目录索引中的 .conf 文件链接
-        files = re.findall(r'href="([^"]+\.conf)"', html)
-        # 去重并排序
+        text = download("https://ruleset.skk.moe/")
+        # 还原 Markdown 转义的下划线（apple\_cdn.conf -> apple_cdn.conf）
+        text = text.replace(r'\_', '_')
+        lines = text.splitlines()
+
+        # 步骤1: 定位 List 区域（从 "List" 到下一个顶级区域如 Clash）
+        in_list = False
+        list_lines = []
+        for line in lines:
+            stripped = line.strip().lstrip('-– ').strip()
+            if stripped == "List":
+                in_list = True
+                continue
+            if in_list and stripped in ("Clash", "Surfboard", "LegacyClashPremium",
+                                         "Modules", "Mock", "Internal", "LICENSE"):
+                break
+            if in_list:
+                list_lines.append(line)
+
+        # 步骤2: 在 List 区域内定位目标分类
+        in_category = False
+        category_lines = []
+        for line in list_lines:
+            stripped = line.strip().lstrip('-– ').strip()
+            if stripped == category:
+                in_category = True
+                continue
+            if in_category and stripped in ("domainset", "non_ip", "ip"):
+                break
+            if in_category:
+                category_lines.append(line)
+
+        # 步骤3: 提取 .conf 文件名
+        files = []
+        for line in category_lines:
+            stripped = line.strip().lstrip('-– ').strip()
+            if stripped.endswith('.conf'):
+                files.append(stripped)
+
         return sorted(list(set(files)))
     except Exception as e:
-        print(f"[警告] 无法从 {index_url} 获取文件列表: {e}")
+        print(f"[警告] 无法从 ruleset.skk.moe 获取 {category} 文件列表: {e}")
         return []
 
 
@@ -326,7 +360,7 @@ def main():
     print(f"规则源: {BASE_URL}")
     print("=" * 50)
 
-    # 从 ruleset.skk.moe 网站目录页自动抓取文件列表
+    # 从 ruleset.skk.moe 根页面自动解析文件列表
     domainset_files = list_remote_files("domainset")
     non_ip_files = list_remote_files("non_ip")
     ip_files = list_remote_files("ip")
