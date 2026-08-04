@@ -72,7 +72,10 @@ IP_FILES = [
 ]
 
 # SukkaW 的水印域名，domain-list-community 会拒绝（含下划线）
-WATERMARK = "7h15_ru1353t_1s_m4d3_by_5ukk4w.skk.moe"
+WATERMARKS = [
+    "7h15_ru1353t_1s_m4d3_by_5ukk4w.skk.moe",
+    "this_rule_set_is_made_by_sukkaw",
+]
 
 
 def is_valid_domain_label(label: str) -> bool:
@@ -88,7 +91,7 @@ def is_valid_domain(domain: str) -> bool:
     """校验完整域名是否合法（用于 domain/suffix）"""
     if not domain or len(domain) > 253:
         return False
-    if domain == WATERMARK:
+    if domain in WATERMARKS:
         return False
     labels = domain.split(".")
     # 允许通配符前缀 *.example.com 中去掉 * 后的校验
@@ -98,6 +101,30 @@ def is_valid_domain(domain: str) -> bool:
         if not is_valid_domain_label(label):
             return False
     return True
+
+
+def is_valid_dlc_chars(value: str) -> bool:
+    """
+    domain-list-community 的 validateDomainChars 等价校验。
+    只允许 a-z, 0-9, ., -（domain/full/keyword 类型通用）
+    """
+    if not value:
+        return False
+    for c in value.lower():
+        if 'a' <= c <= 'z' or '0' <= c <= '9' or c in '.-':
+            continue
+        return False
+    return True
+
+
+def is_watermark(value: str) -> bool:
+    """检查是否包含 SukkaW 水印特征（下划线是主要标志）"""
+    if "_" in value:
+        return True
+    for wm in WATERMARKS:
+        if wm in value:
+            return True
+    return False
 
 
 def download(url: str) -> str:
@@ -115,7 +142,6 @@ def wildcard_to_regex(pattern: str) -> str:
     Surge 通配符语义：* 匹配任意字符序列，? 匹配单个字符。
     使用 re.escape 安全处理其他字符，避免正则元字符冲突。
     """
-    # 用占位符保护通配符，防止被 re.escape 转义
     ph_star = "\x00STAR\x00"
     ph_qmark = "\x00QMARK\x00"
     temp = pattern.replace("*", ph_star).replace("?", ph_qmark)
@@ -138,11 +164,9 @@ def convert_domainset(content: str) -> str:
         if line.startswith("."):
             domain = line[1:]
             if is_valid_domain(domain):
-                # domain-list-community 中 domain: 表示 suffix 匹配
                 lines.append(f"domain:{domain}")
         else:
             if is_valid_domain(line):
-                # domain-list-community 中 full: 表示完整域名匹配
                 lines.append(f"full:{line}")
     return "\n".join(lines)
 
@@ -160,7 +184,6 @@ def convert_non_ip(content: str, filename: str):
         if line.startswith("DOMAIN,"):
             domain = line[7:].strip()
             if is_valid_domain(domain):
-                # 完整域名匹配 -> full:
                 lines.append(f"full:{domain}")
             else:
                 invalid += 1
@@ -168,19 +191,24 @@ def convert_non_ip(content: str, filename: str):
         elif line.startswith("DOMAIN-SUFFIX,"):
             domain = line[14:].strip()
             if is_valid_domain(domain):
-                # 后缀匹配 -> domain:（domain-list-community 的 domain: 就是 suffix 语义）
                 lines.append(f"domain:{domain}")
             else:
                 invalid += 1
 
         elif line.startswith("DOMAIN-KEYWORD,"):
             keyword = line[15:].strip()
-            lines.append(f"keyword:{keyword}")
+            # domain-list-community 对 keyword 也会执行 validateDomainChars
+            if is_valid_dlc_chars(keyword) and not is_watermark(keyword):
+                lines.append(f"keyword:{keyword}")
+            else:
+                invalid += 1
 
         elif line.startswith("DOMAIN-WILDCARD,"):
             pattern = line[16:].strip()
+            if is_watermark(pattern):
+                invalid += 1
+                continue
             regex = wildcard_to_regex(pattern)
-            # 校验生成的正则是否合法
             try:
                 re.compile(regex)
                 lines.append(f"regexp:{regex}")
@@ -201,7 +229,7 @@ def convert_non_ip(content: str, filename: str):
         if len(dropped) > 5:
             print(f"    ... 还有 {len(dropped) - 5} 条")
     if invalid:
-        print(f"  [{filename}] 过滤 {invalid} 条非法域名（含水印）")
+        print(f"  [{filename}] 过滤 {invalid} 条非法域名/关键字（含水印）")
 
     return "\n".join(lines)
 
