@@ -230,7 +230,9 @@ def fetch_and_convert(category: str, files: list, converter, out_subdir: Path):
     """批量下载并转换"""
     for fname in files:
         url = f"{BASE_URL}/{category}/{fname}"
-        tag = Path(fname).stem
+        # domain-list-community 的 list name 只能包含 A-Z, 0-9, -, !
+        # 因此把文件名中的下划线替换为连字符
+        tag = Path(fname).stem.replace("_", "-")
         try:
             content = download(url)
         except urllib.error.HTTPError as e:
