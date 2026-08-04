@@ -10,19 +10,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # 防止 bot 提交的 [skip ci] 触发无限循环
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-        with:
-          # 需要写权限来 push
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Go
         uses: actions/setup-go@v6
         with:
           go-version: '1.22'
+          cache: false
 
       - name: Download & Convert Rules
         run: |
@@ -39,7 +36,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/
-          # 只有真有变化时才提交，避免空 commit
           git diff --cached --quiet || git commit -m "chore: update converted rules data [skip ci]"
           git push
 
@@ -66,7 +62,7 @@ jobs:
           echo "IP DAT 大小: $(du -h ../dist/sukka-ip.dat | cut -f1)"
 
       - name: Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: latest
           name: Sukka Rules for dae (latest)
