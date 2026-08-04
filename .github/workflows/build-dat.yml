@@ -1,4 +1,4 @@
-name: Build dae v2ray dat
+name: Build dae dat
 
 
 on:
@@ -6,6 +6,7 @@ on:
   schedule:
 
     - cron: "0 3 */3 * *"
+
 
   workflow_dispatch:
 
@@ -26,14 +27,17 @@ jobs:
     runs-on: ubuntu-latest
 
 
+
     steps:
 
 
-    - uses: actions/checkout@v4
+    - name: Checkout
+
+      uses: actions/checkout@v4
 
 
 
-    - name: Download Sukka ruleset
+    - name: Download Sukka rules
 
       uses: actions/checkout@v4
 
@@ -45,7 +49,7 @@ jobs:
 
 
 
-    - name: Install Go
+    - name: Setup Go
 
       uses: actions/setup-go@v5
 
@@ -55,36 +59,65 @@ jobs:
 
 
 
-    - name: Build geosite
+    - name: Convert rules
 
       run: |
+
+        python3 scripts/convert_sukka.py
+
+
+
+    - name: Build geosite.dat
+
+      run: |
+
+        mkdir release
 
 
         git clone \
         https://github.com/v2fly/domain-list-community.git
 
 
-        python3 scripts/convert_sukka.py
+        cp -r data \
+        domain-list-community/data
+
 
 
         cd domain-list-community
 
-        make
+
+        go install .
+
+
+        $(go env GOPATH)/bin/domain-list-community \
+        -outputdir ../release \
+        -outputname geosite.dat
 
 
 
-    - name: Build geoip
+    - name: Build geoip.dat
 
       run: |
-
 
         git clone \
         https://github.com/v2fly/geoip.git
 
 
+
+        cp -r geoip_data \
+        geoip/data
+
+
+
         cd geoip
 
-        make
+
+        go install .
+
+
+        $(go env GOPATH)/bin/geoip \
+        -outputdir ../release \
+        -outputname geoip.dat
 
 
 
@@ -98,6 +131,6 @@ jobs:
 
         files: |
 
-          domain-list-community/geosite.dat
+          release/geosite.dat
 
-          geoip/geoip.dat
+          release/geoip.dat
