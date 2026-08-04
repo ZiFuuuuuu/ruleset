@@ -95,7 +95,6 @@ def is_valid_domain(domain: str) -> bool:
     if domain in WATERMARKS:
         return False
     labels = domain.split(".")
-    # 允许通配符前缀 *.example.com 中去掉 * 后的校验
     for label in labels:
         if label == "*":
             continue
@@ -141,7 +140,6 @@ def wildcard_to_regex(pattern: str) -> str:
     """
     将 Surge DOMAIN-WILDCARD 转换为正则表达式。
     Surge 通配符语义：* 匹配任意字符序列，? 匹配单个字符。
-    使用 re.escape 安全处理其他字符，避免正则元字符冲突。
     """
     ph_star = "\x00STAR\x00"
     ph_qmark = "\x00QMARK\x00"
@@ -165,11 +163,11 @@ def convert_domainset(content: str) -> str:
         if line.startswith("."):
             domain = line[1:]
             if is_valid_domain(domain):
-                # domain-list-community 中 domain: 表示 suffix 匹配
-                lines.append(f"domain:{domain}")
+                # domain-list-community 默认类型就是 domain（suffix 语义），省略前缀
+                lines.append(domain)
         else:
             if is_valid_domain(line):
-                # domain-list-community 中 full: 表示完整域名匹配
+                # 完整域名匹配
                 lines.append(f"full:{line}")
     return "\n".join(lines)
 
@@ -187,7 +185,6 @@ def convert_non_ip(content: str, filename: str):
         if line.startswith("DOMAIN,"):
             domain = line[7:].strip()
             if is_valid_domain(domain):
-                # 完整域名匹配 -> full:
                 lines.append(f"full:{domain}")
             else:
                 invalid += 1
@@ -195,14 +192,13 @@ def convert_non_ip(content: str, filename: str):
         elif line.startswith("DOMAIN-SUFFIX,"):
             domain = line[14:].strip()
             if is_valid_domain(domain):
-                # 后缀匹配 -> domain:（domain-list-community 的 domain: 就是 suffix 语义）
-                lines.append(f"domain:{domain}")
+                # domain-list-community 默认类型即 domain（suffix 语义），省略前缀
+                lines.append(domain)
             else:
                 invalid += 1
 
         elif line.startswith("DOMAIN-KEYWORD,"):
             keyword = line[15:].strip()
-            # domain-list-community 对 keyword 也会执行 validateDomainChars
             if is_valid_dlc_chars(keyword) and not is_watermark(keyword):
                 lines.append(f"keyword:{keyword}")
             else:
@@ -248,14 +244,11 @@ def convert_ip(content: str) -> str:
         line = line.strip()
         if not line or line.startswith("#"):
             continue
-
-        # 跳过水印域名
         if line.startswith("DOMAIN,"):
             continue
 
         cidr = None
         if line.startswith("IP-CIDR,"):
-            # 取逗号分隔后的第二部分（CIDR），忽略 no-resolve 等后续参数
             parts = line.split(",")
             if len(parts) >= 2:
                 cidr = parts[1].strip()
@@ -265,7 +258,6 @@ def convert_ip(content: str) -> str:
                 cidr = parts[1].strip()
 
         if cidr:
-            # 校验 CIDR 格式合法性
             try:
                 ipaddress.ip_network(cidr, strict=False)
                 lines.append(cidr)
@@ -304,7 +296,6 @@ def generate_geoip_config(ip_dir: Path) -> dict:
             }
         })
 
-    # v2fly/geoip 的 output 必须是数组
     return {
         "input": inputs,
         "output": [
@@ -345,8 +336,17 @@ def fetch_and_convert(category: str, files: list, converter, out_subdir: Path):
         else:
             out_path = out_subdir / tag
 
-        out_path.write_text(result, encoding="utf-8")
-        print(f"[{category:9s}] {fname} -> {out_path.name} ({len(result.splitlines())} 条)")
+        # 如果同名文件已存在（domainset 与 non_ip 重叠），追加合并而非覆盖
+        if out_path.exists():
+            existing = out_path.read_text(encoding="utf-8")
+            combined = existing + "\n" + result
+            out_path.write_text(combined, encoding="utf-8")
+            total_lines = len(combined.splitlines())
+            new_lines = len(result.splitlines())
+            print(f"[{category:9s}] {fname} -> {out_path.name} (追加 {new_lines} 条, 共 {total_lines} 条)")
+        else:
+            out_path.write_text(result, encoding="utf-8")
+            print(f"[{category:9s}] {fname} -> {out_path.name} ({len(result.splitlines())} 条)")
 
 
 def main():
@@ -362,7 +362,6 @@ def main():
     fetch_and_convert("non_ip", NON_IP_FILES, convert_non_ip, out / "domains")
     fetch_and_convert("ip", IP_FILES, convert_ip, out / "ips")
 
-    # 生成 geoip 配置
     config = generate_geoip_config(out / "ips")
     (out / "geoip-config.json").write_text(
         json.dumps(config, indent=2, ensure_ascii=False), encoding="utf-8"
