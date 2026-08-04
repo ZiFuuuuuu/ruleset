@@ -49,7 +49,7 @@ NON_IP_FILES = [
     "lan.conf",
     "microsoft_cdn.conf",
     "microsoft.conf",
-    "my_direct.conf,
+    "my_direct.conf",
     "my_git.conf",
     "my_plus.conf",
     "my_proxy.conf",
