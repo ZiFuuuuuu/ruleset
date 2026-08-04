@@ -11,14 +11,14 @@
 """
 import sys
 import json
+import re
 import urllib.request
 import urllib.error
 from pathlib import Path
 
 BASE_URL = "https://ruleset.skk.moe/List"
 
-# 需要下载并转换的规则文件列表
-# 你可以根据需要增删
+# 需要下载并转换的规则文件列表（按需增删）
 DOMAINSET_FILES = [
     "apple_cdn.conf",
     "cdn.conf",
@@ -71,6 +71,34 @@ IP_FILES = [
     "telegram.conf",
 ]
 
+# SukkaW 的水印域名，domain-list-community 会拒绝（含下划线）
+WATERMARK = "7h15_ru1353t_1s_m4d3_by_5ukk4w.skk.moe"
+
+
+def is_valid_domain_label(label: str) -> bool:
+    """校验域名 label 是否合法（RFC 1123）"""
+    if not label or len(label) > 63:
+        return False
+    if label.startswith("-") or label.endswith("-"):
+        return False
+    return bool(re.fullmatch(r"[a-zA-Z0-9-]+", label))
+
+
+def is_valid_domain(domain: str) -> bool:
+    """校验完整域名是否合法（用于 domain/suffix）"""
+    if not domain or len(domain) > 253:
+        return False
+    if domain == WATERMARK:
+        return False
+    labels = domain.split(".")
+    # 允许通配符前缀 *.example.com 中去掉 * 后的校验
+    for label in labels:
+        if label == "*":
+            continue
+        if not is_valid_domain_label(label):
+            return False
+    return True
+
 
 def download(url: str) -> str:
     """下载文本内容"""
@@ -89,9 +117,12 @@ def convert_domainset(content: str) -> str:
         if not line or line.startswith("#"):
             continue
         if line.startswith("."):
-            lines.append(f"suffix:{line[1:]}")
+            domain = line[1:]
+            if is_valid_domain(domain):
+                lines.append(f"suffix:{domain}")
         else:
-            lines.append(f"domain:{line}")
+            if is_valid_domain(line):
+                lines.append(f"domain:{line}")
     return "\n".join(lines)
 
 
@@ -99,19 +130,29 @@ def convert_non_ip(content: str, filename: str):
     """non_ip 包含多种规则，只提取 dae 支持的域名类规则"""
     lines = []
     dropped = []
+    invalid = 0
     for line in content.strip().split("\n"):
         line = line.strip()
         if not line or line.startswith("#"):
             continue
 
         if line.startswith("DOMAIN,"):
-            lines.append(f"domain:{line[7:].strip()}")
+            domain = line[7:].strip()
+            if is_valid_domain(domain):
+                lines.append(f"domain:{domain}")
+            else:
+                invalid += 1
 
         elif line.startswith("DOMAIN-SUFFIX,"):
-            lines.append(f"suffix:{line[14:].strip()}")
+            domain = line[14:].strip()
+            if is_valid_domain(domain):
+                lines.append(f"suffix:{domain}")
+            else:
+                invalid += 1
 
         elif line.startswith("DOMAIN-KEYWORD,"):
-            lines.append(f"keyword:{line[15:].strip()}")
+            keyword = line[15:].strip()
+            lines.append(f"keyword:{keyword}")
 
         elif line.startswith("DOMAIN-WILDCARD,"):
             pattern = line[16:].strip()
@@ -134,6 +175,8 @@ def convert_non_ip(content: str, filename: str):
             print(f"    - {d}")
         if len(dropped) > 5:
             print(f"    ... 还有 {len(dropped) - 5} 条")
+    if invalid:
+        print(f"  [{filename}] 过滤 {invalid} 条非法域名（含水印）")
 
     return "\n".join(lines)
 
