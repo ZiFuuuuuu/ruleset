@@ -1,0 +1,9 @@
+regexp:^download.*\.mediafire\.com$
+regexp:^ftp\...\.debian\.org$
+regexp:^ftp\...\.freebsd\.org$
+regexp:^s3\..*\.backblazeb2\.com$
+regexp:^.*\.s3\..*\.backblazeb2\.com$
+regexp:^cdn\-.*\.comaps\.app$
+regexp:^cdn\-.*\.comaps\.tech$
+regexp:^cdn\-.*\.organicmaps\.app$
+regexp:^dl\-.*\.mypikpak\.com$
