@@ -11,3 +11,16 @@ regexp:^.*\.ffzy\-online.\.com$
 regexp:^.*\.ffzy\-play.\.com$
 regexp:^.*\.lz\-cdn.\.com$
 regexp:^.*\.lz\-cdn..\.com$
+full:javdb.com
+full:mhgui.com
+full:avbebe.com
+full:hanime1.me
+full:yymanhua.com
+cdn.hinet.net
+full:av.jkforum.net
+full:www.yymanhua.com
+full:www.manhuagui.com
+regexp:^.*\.ffzy\-online.\.com$
+regexp:^.*\.ffzy\-play.\.com$
+regexp:^.*\.lz\-cdn.\.com$
+regexp:^.*\.lz\-cdn..\.com$
