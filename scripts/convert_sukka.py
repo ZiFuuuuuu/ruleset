@@ -7,21 +7,35 @@ import re
 
 SRC = "ruleset/List"
 
-OUT_DOMAIN = "domain-list-community/data"
+DOMAIN_OUT = "data"
 
-OUT_GEOIP = "geoip/data"
+GEOIP_OUT = "geoip_data"
 
 
-def add_rule(group, rule):
 
-    os.makedirs(
-        OUT_DOMAIN,
-        exist_ok=True
-    )
+def reset_dir(path):
+
+    if os.path.exists(path):
+
+        for f in glob.glob(
+            path + "/*"
+        ):
+
+            if os.path.isfile(f):
+
+                os.remove(f)
+
+    else:
+
+        os.makedirs(path)
+
+
+
+def write_rule(tag, rule):
 
     path = os.path.join(
-        OUT_DOMAIN,
-        group
+        DOMAIN_OUT,
+        tag
     )
 
     with open(
@@ -35,16 +49,12 @@ def add_rule(group, rule):
         )
 
 
-def add_ip(group, ip):
 
-    os.makedirs(
-        OUT_GEOIP,
-        exist_ok=True
-    )
+def write_ip(tag, ip):
 
     path = os.path.join(
-        OUT_GEOIP,
-        group
+        GEOIP_OUT,
+        tag
     )
 
     with open(
@@ -58,44 +68,61 @@ def add_ip(group, ip):
         )
 
 
-def clean_domain(d):
 
-    d=d.strip()
+def clean_domain(domain):
 
-    if d.startswith("."):
-        d=d[1:]
+    domain = domain.strip()
 
-    return d.lower()
+
+    if domain.startswith("."):
+
+        domain = domain[1:]
+
+
+    return domain.lower()
 
 
 
 def convert_domainset(line):
 
-    d=clean_domain(line)
-
-    if d:
-
-        return "domain:" + d
+    line=line.strip()
 
 
+    if not line:
 
-def wildcard_convert(d):
+        return None
 
-    d=d.strip()
+
+    # domainset全部按后缀处理
+
+    return (
+        "domain:"
+        +
+        clean_domain(line)
+    )
+
+
+
+def convert_wildcard(domain):
+
+    domain=domain.strip()
 
 
     # *.example.com
-    if d.startswith("*."):
+
+    if domain.startswith("*."):
 
         return (
             "domain:"
             +
-            d[2:]
+            clean_domain(
+                domain[2:]
+            )
         )
 
 
-    # 普通通配
-    pattern=re.escape(d)
+    pattern=re.escape(domain)
+
 
     pattern=pattern.replace(
         r"\*",
@@ -115,121 +142,145 @@ def wildcard_convert(d):
 
 def convert_non_ip(line):
 
-    p=line.split(",")
+    parts=line.split(",")
 
-    if len(p)<2:
+
+    if len(parts)<2:
+
         return None
 
 
-    t=p[0].upper()
 
-    d=p[1].strip()
+    rule=parts[0].upper()
+
+    value=parts[1].strip()
 
 
 
-    if t=="DOMAIN":
+    if rule=="DOMAIN":
 
         return (
             "full:"
             +
-            clean_domain(d)
+            clean_domain(value)
         )
 
 
-    if t=="DOMAIN-SUFFIX":
+    elif rule=="DOMAIN-SUFFIX":
 
         return (
             "domain:"
             +
-            clean_domain(d)
+            clean_domain(value)
         )
 
 
-    if t=="DOMAIN-KEYWORD":
+    elif rule=="DOMAIN-KEYWORD":
 
         return (
             "keyword:"
             +
-            d
+            value
         )
 
 
-    if t=="DOMAIN-WILDCARD":
+    elif rule=="DOMAIN-WILDCARD":
 
-        return wildcard_convert(d)
+        return convert_wildcard(value)
 
 
-    # 不支持
+
+    # 以下 Surge 规则 V2Ray 不支持
+
+    elif rule in (
+        "PROCESS-NAME",
+        "USER-AGENT",
+        "URL-REGEX",
+        "DST-PORT",
+        "SRC-IP-CIDR"
+    ):
+
+        return None
+
+
     return None
 
 
 
 def convert_ip(line):
 
-    p=line.split(",")
+    parts=line.split(",")
 
-    if len(p)<2:
+
+    if len(parts)<2:
+
         return None
 
 
-    if p[0].upper() in (
+
+    rule=parts[0].upper()
+
+
+    if rule in (
         "IP-CIDR",
         "IP-CIDR6"
     ):
 
-        return p[1]
+        return parts[1].strip()
+
+
+    return None
+
 
 
 def main():
 
 
-    # 清空旧文件
+    reset_dir(
+        DOMAIN_OUT
+    )
 
-    for d in (
-        OUT_DOMAIN,
-        OUT_GEOIP
-    ):
 
-        if os.path.exists(d):
-
-            for f in glob.glob(
-                d+"/*"
-            ):
-
-                os.remove(f)
+    reset_dir(
+        GEOIP_OUT
+    )
 
 
 
-    for root,dirs,files in os.walk(SRC):
-
-        for file in files:
+    for root, dirs, files in os.walk(SRC):
 
 
-            if not file.endswith(".conf"):
+        for filename in files:
+
+
+            if not filename.endswith(".conf"):
+
                 continue
 
 
 
             path=os.path.join(
                 root,
-                file
+                filename
             )
 
 
-            rel=os.path.relpath(
+
+            relative=os.path.relpath(
                 path,
                 SRC
             )
 
 
-            category=rel.split(
+            category=relative.split(
                 os.sep
             )[0]
 
 
             tag=os.path.splitext(
-                file
+                filename
             )[0]
+
 
 
             print(
@@ -238,10 +289,12 @@ def main():
             )
 
 
+
             with open(
                 path,
                 encoding="utf-8"
             ) as f:
+
 
 
                 for line in f:
@@ -251,51 +304,69 @@ def main():
 
 
                     if not line:
+
                         continue
+
+
+
+                    result=None
+
 
 
                     if category=="domainset":
 
-                        r=convert_domainset(
+                        result=convert_domainset(
                             line
                         )
 
-                        if r:
-                            add_rule(
+
+                        if result:
+
+                            write_rule(
                                 tag,
-                                r
+                                result
                             )
+
 
 
                     elif category=="non_ip":
 
-                        r=convert_non_ip(
+
+                        result=convert_non_ip(
                             line
                         )
 
-                        if r:
-                            add_rule(
+
+                        if result:
+
+                            write_rule(
                                 tag,
-                                r
+                                result
                             )
+
 
 
                     elif category=="ip":
 
-                        r=convert_ip(
+
+                        result=convert_ip(
                             line
                         )
 
-                        if r:
 
-                            add_ip(
+                        if result:
+
+                            write_ip(
                                 tag,
-                                r
+                                result
                             )
 
 
 
-    print("Done")
+    print(
+        "Conversion finished"
+    )
+
 
 
 if __name__=="__main__":
