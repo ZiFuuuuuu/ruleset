@@ -1,3 +1,4 @@
+full:7h15.ru1353t.1s.m4d3.by.5ukk4w.skk.moe
 gcr.io
 full:ghp.ci
 k8s.io
@@ -1965,6 +1966,7 @@ s3-accesspoint.dualstack.ap-southeast-5.amazonaws.com
 s3-accesspoint-fips.dualstack.ca-central-1.amazonaws.com
 s3-accesspoint-fips.dualstack.us-gov-east-1.amazonaws.com
 s3-accesspoint-fips.dualstack.us-gov-west-1.amazonaws.com
+full:7h15.ru1353t.1s.m4d3.by.5ukk4w.skk.moe
 regexp:^download.*\.mediafire\.com$
 regexp:^ftp\...\.debian\.org$
 regexp:^ftp\...\.freebsd\.org$
