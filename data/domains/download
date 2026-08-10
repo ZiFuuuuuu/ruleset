@@ -101,6 +101,7 @@ full:ctan.math.ca
 full:d2.myani.org
 full:deb.sury.org
 full:debian.a1.bg
+full:dl.pikpak.io
 full:ftp.agdsn.de
 full:ftp.antik.sk
 full:ftp.arnes.si
@@ -215,6 +216,7 @@ full:mirrors.up.pt
 ossplanet.org
 packagist.org
 full:repository.su
+s3.yandex.net
 full:sft.if.usp.br
 full:ubuntu.dts.mg
 full:ubuntu.nic.cz
@@ -444,7 +446,6 @@ full:ruleset.skk.moe
 full:tux.rainside.sk
 full:ubuntu.grena.ge
 full:ubuntu.lagis.at
-full:ubuntu.syxpi.fr
 full:ubuntu.uvigo.es
 full:updates.64gr.am
 full:www-ftp.lip6.fr
@@ -488,7 +489,6 @@ full:down.filen-5.net
 full:download.kde.org
 full:download.nust.na
 full:eclats.crans.org
-full:edge.zerofs.link
 epicgamescdn.com
 full:fedorapeople.org
 full:formulae.brew.sh
@@ -546,7 +546,6 @@ full:mirror.ufs.ac.za
 full:mirror.ufscar.br
 full:mirror.veesp.com
 full:mirror.yandex.ru
-full:mirror1.hcgen.de
 full:mirror1.ku.ac.th
 full:mirrors.asnet.am
 mirrors.blix.com
@@ -911,7 +910,6 @@ full:download.eassos.com
 full:download.edovia.com
 full:download.garmin.com
 full:download.mxfast.com
-full:download.nus.edu.sg
 download.nvidia.com
 full:download.osmand.net
 full:download.sketch.com
@@ -1105,7 +1103,6 @@ mirror.digionline.de
 mirror.ftn.uns.ac.rs
 full:mirror.gotmyhost.com
 full:mirror.hashy0917.net
-full:mirror.hyperdedic.ru
 full:mirror.infomaniak.ch
 full:mirror.its.umich.edu
 full:mirror.low-orbit.net
@@ -1173,6 +1170,7 @@ full:desktop.parallels.com
 full:distcache.freebsd.org
 full:dl.orangefox.download
 download.autodesk.com
+full:download.fcitx-im.org
 full:download.geofabrik.de
 full:download.gigabyte.com
 full:download.iboysoft.com
@@ -1224,7 +1222,6 @@ full:mirrors.opensource.is
 full:mirrors.rpmfusion.org
 mirrors.spacedump.net
 full:mirrors.us.kernel.org
-full:mirrors.wikimedia.org
 full:mirrors.xmissions.com
 full:origin-a.akamaihd.net
 full:os-cdn.virtfusion.net
