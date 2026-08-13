@@ -409,6 +409,7 @@ full:cdn.css.net
 full:cdn.cuty.io
 full:cdn.fera.ai
 full:cdn.gist.ai
+full:cdn.id.life
 full:cdn.mer.run
 full:cdn.mida.so
 full:cdn.nba.com
@@ -482,6 +483,7 @@ imagehub.cc
 full:img.agrd.eu
 full:img.skk.moe
 full:img.toto.im
+imgcdn8.com
 imgikzy.com
 imglink.win
 imgsmail.ru
@@ -1298,6 +1300,7 @@ nelreports.net
 newscdn.com.au
 nincontent.com
 ninjastream.to
+full:node.windy.com
 full:null.jsbin.com
 full:optimizely.com
 patientpop.com
@@ -1445,6 +1448,7 @@ full:cdn.adguard.com
 full:cdn.adsninja.ca
 full:cdn.apponic.com
 full:cdn.aptoide.com
+full:cdn.bitrix24.eu
 full:cdn.bsky.social
 full:cdn.craft.cloud
 full:cdn.daradara.me
@@ -1549,6 +1553,7 @@ fontawesome.com
 full:fonts.bunny.net
 full:fonts.gishan.cc
 full:fonts.upset.dev
+full:fonts.wd40.info
 gannett-cdn.com
 gauthstatic.com
 full:gdb.voanews.com
@@ -1607,6 +1612,7 @@ full:media.giphy.com
 full:media.licdn.com
 full:media.smooch.io
 full:media.tenor.com
+full:media.wd40.asia
 full:media.webtoo.ls
 full:media.wired.com
 full:metrics.kapa.ai
@@ -1766,6 +1772,7 @@ bootstrapcdn.com
 bugly.qcloud.com
 full:bundlephobia.com
 full:cache.ip-api.com
+full:cache.sgvafs.com
 capcutstatic.com
 full:cdn-1.porn87.com
 full:cdn-1.strava.com
@@ -1871,6 +1878,7 @@ gateway.scarf.sh
 getaroom-cdn.com
 full:gis.pinkbike.org
 githubassets.com
+githubstatus.com
 glass.adidas.com
 full:glyph.medium.com
 full:gravatar.cat.net
@@ -2274,6 +2282,7 @@ imagedelivery.net
 images-amazon.com
 full:images.carfax.com
 full:images.mattel.net
+full:images.motion.dev
 full:images.now-tv.com
 full:images.nvidia.com
 full:images.pexels.com
@@ -2362,6 +2371,7 @@ full:signal.cdnbye.com
 simplecastcdn.com
 slidesharecdn.com
 full:sp.streamlabs.com
+spaceship-cdn.com
 full:st.codeforces.com
 full:st.deviantart.net
 full:static-id.fc2.com
@@ -2401,6 +2411,8 @@ full:static.tumblr.com
 full:static.vinted.com
 full:static.vocadb.net
 full:static.zaobao.com
+full:status.claude.com
+full:status.openai.com
 full:stbff.newfold.com
 steemitimages.com
 full:storage.ko-fi.com
@@ -2583,6 +2595,7 @@ full:img.4gamers.com.tw
 full:img.fastcybers.com
 full:img.hellofresh.com
 full:img.sparknotes.com
+full:imgproxy.windy.com
 full:imgrs.apkcombo.com
 full:imgs3.hcaptcha.com
 intercomassets.com
@@ -3144,6 +3157,7 @@ full:cdn9.bigcommerce.com
 full:cdnjs.cloudflare.com
 full:chart.googleapis.com
 cloud.influxdata.com
+cloudflarestatus.com
 cloudflarestream.com
 cloudinary.vpsvc.com
 full:cms.socialinsider.io
@@ -3286,6 +3300,7 @@ full:static.incapsula.com
 full:static.infomaniak.ch
 full:static.macupdate.com
 full:static.mediafire.com
+full:static.meteoblue.com
 full:static.mocortech.com
 full:static.newsbreak.com
 full:static.parallels.com
@@ -3360,6 +3375,7 @@ full:assets.sendinblue.com
 full:assets.tatlerasia.com
 full:assets.unicorn.studio
 full:assets.unredacted.org
+full:assets.userstyles.org
 full:assets.vodafone.co.uk
 full:assets0.headwayapp.co
 full:assets2.freshdesk.com
@@ -4226,6 +4242,7 @@ full:images3.cmp.optimizely.com
 full:images4.cmp.optimizely.com
 full:imgssl.constantcontact.com
 full:launchercontent.mojang.com
+full:maps-api-cdn.meteoblue.com
 full:mgx-backend-cdn.metadl.com
 full:mobilecenter.azureedge.net
 myanalytics.cdn.office.net
