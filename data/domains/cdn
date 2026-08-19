@@ -4649,8 +4649,6 @@ keyword:-assets.worldsex.com
 keyword:-thumbs.worldsex.com
 keyword:99avcdn
 keyword:-images.disco-api.com
-keyword:vdownload.hanime1
-keyword:fonts.hanime1
 keyword:static.grammarly.com
 regexp:^cdn\..*\.office\.net$
 regexp:^cdn\..*\.microsoft\.com$
@@ -4704,7 +4702,6 @@ regexp:^.*\.skyearth.\.xyz$
 regexp:^.*\.img\..*\.sendibm.\.com$
 regexp:^cdn.\.18girlssex\.com$
 regexp:^uploads\-.*\.insided\.com$
-regexp:^s.*\.hanime1$
 regexp:^img\-.*\.now\.com$
 regexp:^assets\..*\.imaga\.co$
 regexp:^cdn.*\.pigav\.com$
