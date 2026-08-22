@@ -541,7 +541,6 @@ reactjs.org
 full:s.gishan.cc
 full:s.imgur.com
 full:s.plurk.com
-full:s3.aaaaa.io
 full:s3.masto.ai
 skypack.dev
 smilecdn.co
@@ -1468,6 +1467,7 @@ full:cdn.iporntv.net
 full:cdn.javmiku.com
 full:cdn.jetboost.io
 full:cdn.jolipage.co
+full:cdn.leonardo.ai
 full:cdn.mathjax.org
 full:cdn.mcp-use.com
 full:cdn.mercury.com
@@ -1554,6 +1554,7 @@ firebaseapp.com
 fontawesome.com
 full:fonts.bunny.net
 full:fonts.gishan.cc
+full:fonts.reown.com
 full:fonts.upset.dev
 full:fonts.wd40.info
 gannett-cdn.com
@@ -1664,7 +1665,6 @@ full:sprig.figma.com
 full:ssl.gstatic.com
 stack.imgur.com
 stackassets.com
-full:static.bad.news
 full:static.blip.net
 full:static.fboom.me
 full:static.ietf.org
@@ -1800,6 +1800,7 @@ full:cdn.equalweb.com
 full:cdn.firebase.com
 full:cdn.foxycart.com
 full:cdn.getkoala.com
+full:cdn.getmerlin.in
 full:cdn.ghostery.com
 full:cdn.gofundme.com
 full:cdn.hashnode.com
@@ -2466,7 +2467,6 @@ full:assets.jolipage.co
 full:assets.mailgun.com
 full:assets.nflxext.com
 full:assets.nxtrace.org
-full:assets.onestore.ms
 full:assets.ontrack.com
 full:assets.pingone.com
 full:assets.porndig.com
@@ -2498,7 +2498,6 @@ full:cdn.boldmethod.com
 full:cdn.britannica.com
 full:cdn.bullwhip.cloud
 full:cdn.cmcmarkets.com
-full:cdn.commandbar.com
 full:cdn.contentful.com
 full:cdn.convertbox.com
 full:cdn.conveythis.com
@@ -3726,6 +3725,7 @@ full:promotions.betfair.com
 full:proxy.joinmastodon.org
 full:public.flourish.studio
 full:res-geo.cdn.office.net
+full:resource.logitechg.com
 full:resource.video.nimg.jp
 full:resources.allstate.com
 full:rv-assets.softonic.com
@@ -4160,6 +4160,7 @@ push.services.mozilla.com
 ravencoinipfs-gateway.com
 full:report-uri.cloudflare.com
 full:resource.tnlmediagene.com
+full:s3.beta.coinmarketcap.com
 full:scripts.scriptwrapper.com
 full:simplicity.trustpilot.com
 smartscreen.microsoft.com
@@ -4588,7 +4589,6 @@ full:cdn-yotpo-images-production.yotpo.com
 full:cdn.us-east-1.prod.moon.dubai.aws.dev
 content-storage-upload.googleapis.com
 full:firefox.settings.services.mozilla.com
-full:frames-commandbar-prod.commandbar.com
 full:frontend-apps-multi-region.workos.com
 full:pplx-next-static-public.perplexity.ai
 full:prod-packager-packages.codesandbox.io
