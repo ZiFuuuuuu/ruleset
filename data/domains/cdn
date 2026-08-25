@@ -904,6 +904,7 @@ emotivecdn.io
 ensighten.com
 full:eu.cdnbye.com
 fastlycdn.com
+fe.indazn.com
 feedercdn.com
 fiverrcdn.com
 flagpedia.net
@@ -2391,6 +2392,7 @@ full:static.codepen.io
 full:static.cracked.ax
 full:static.cracked.sh
 full:static.crypto.com
+full:static.dazndn.com
 static.flickr.com
 full:static.frame.work
 full:static.garmin.com
@@ -4235,6 +4237,7 @@ hackerone-user-content.com
 hubspotusercontent-eu1.net
 hubspotusercontent-na1.net
 full:idportal-cdn-prd.unity.com
+full:image.discovery.indazn.com
 full:images.applegamingwiki.com
 full:images.ecomm.microsoft.com
 full:images.financemagnates.com
@@ -4525,6 +4528,7 @@ full:b5x-sentry.1passwordservices.com
 full:cmtycdn.powerpages.microsoft.com
 commondatastorage.googleapis.com
 crash-reports.browser.yandex.net
+full:dazn-content-proxy.sd.indazn.com
 full:detectportal.brave-http-only.com
 full:edge-mobile-static.azureedge.net
 full:nbcnewsdigital-static.nbcuni.com
@@ -4576,6 +4580,7 @@ full:static-assets-prod.unrealengine.com
 full:stubdownloader.services.mozilla.com
 full:cf-images.us-east-1.prod.boltdns.net
 full:content-prod-live.cert.starbucks.com
+full:contentful-asset-proxy.sd.indazn.com
 crashlyticsreports-pa.googleapis.com
 full:crossborder-integration.global-e.com
 full:firebaseinstallations.googleapis.com
