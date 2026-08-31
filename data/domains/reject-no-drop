@@ -42,3 +42,4 @@ regexp:^p2pchunk\-.*\.douyucdn\.cn$
 regexp:^dyp2p\-.*\.douyucdn\.cn$
 regexp:^p2plive\-.*\.douyucdn\.cn$
 regexp:^stun.*\.douyucdn\.cn$
+regexp:^upos\-sz\-302.*\.bilivideo\.com$

@@ -764,6 +764,7 @@ full:spt-for1.edgeuno.com
 full:spt-jfk1.edgeuno.com
 full:spt-lax1.edgeuno.com
 full:spt-lon1.edgeuno.com
+full:spt-noc.umal-nds.com
 full:spt-sjo1.edgeuno.com
 full:srv-st03.arcolink.it
 full:srv-st04.arcolink.it
@@ -1065,6 +1066,7 @@ full:ookla-mia.gigsouth.com
 full:ookla.gctelecom.com.br
 full:ookla.mia.teracast.net
 full:ookla.micrologicwv.com
+full:ookla.premierdc.com.tr
 ookla.surfinternet.com
 full:ookla1.talkiefiber.com
 full:ookla1.the.net.1310.io
@@ -1437,6 +1439,7 @@ full:speedtest.jbarbieri.net
 full:speedtest.jetair.net.in
 full:speedtest.jprdigital.in
 full:speedtest.jsqiuying.com
+full:speedtest.krottisrv.net
 full:speedtest.linknetbv.com
 full:speedtest.longlines.com
 full:speedtest.lucas.company
@@ -1783,6 +1786,7 @@ full:veloteste.mrjomar.com.br
 full:aragonnetspeedtest.com.br
 full:bassoon-sg-1.violin.co.th
 full:bursaspeedtest.pendns.net
+full:cns-speedtest.duckdns.org
 full:hiztesti-ist.codit.com.tr
 full:hl-speed.twmbroadband.com
 full:iskendurum.veganet.com.tr
@@ -1852,6 +1856,7 @@ full:speedtest.cncbroadband.in
 full:speedtest.cod4-server.com
 full:speedtest.coopesantos.com
 full:speedtest.cteducation.net
+full:speedtest.dashcloudly.com
 full:speedtest.dataspindle.com
 full:speedtest.datonofibra.com
 full:speedtest.didimnet.com.tr
@@ -1903,6 +1908,7 @@ full:speedtest.sinetonline.net
 full:speedtest.softether.co.jp
 full:speedtest.softwareeni.com
 full:speedtest.spl.vodafone.nl
+full:speedtest.stormclient.xyz
 full:speedtest.tcom.purdue.edu
 full:speedtest.technobulut.com
 full:speedtest.teknosos.com.tr
@@ -3068,6 +3074,8 @@ full:speedtest.skylink-data-center.nl
 full:speedtest.webfibertelecom.com.br
 full:speedtest.wifi-communication.com
 full:speedtest.winchesterwireless.com
+full:speedtest01.mel01.nexthop.net.au
+full:speedtest01.syd01.nexthop.net.au
 full:speedtest1.kablosuzonline.com.tr
 full:speedtest16.mustafasevinc.com.tr
 full:speedtest2.lightningfibre.net.uk
