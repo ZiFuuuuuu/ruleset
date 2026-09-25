@@ -865,4 +865,4 @@ full:media.cdn.queniuqe.com
 full:cdnstatic.tencentcs.com
 kingsoft-office-service.com
 dl.delivery.mp.microsoft.com
-regexp:^.*\.qhimgs.\.com$
+regexp:^qhimgs.\.com$
