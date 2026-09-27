@@ -16,13 +16,13 @@ jobs:
     steps:
       # 1. 检出你自己的仓库（用于存储最终生成的 srs 文件）
       - name: Checkout your repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6  # 已升级至 v6，支持 Node.js 24
         with:
           path: my-repo
 
       # 2. 检出 SukkaLab 的规则集仓库
       - name: Checkout target repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6  # 已升级至 v6，支持 Node.js 24
         with:
           repository: SukkaLab/ruleset.skk.moe
           path: upstream-repo
@@ -80,7 +80,7 @@ jobs:
 
       # 6. 清理 20 天以前的 Actions 运行记录
       - name: Delete old workflow runs
-        uses: Mattraks/delete-workflow-runs@v2
+        uses: Mattraks/delete-workflow-runs@v2.1.0  # 已升级至 v2.1.0，支持 Node.js 24
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
