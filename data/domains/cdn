@@ -1777,6 +1777,7 @@ full:assets.stash.com
 full:assets.toot.cafe
 full:assets.twitch.tv
 full:assets.upload.io
+full:assets.vanta.com
 full:assets.vogue.com
 full:assets.volvo.com
 full:assets.xmind.net
@@ -2348,6 +2349,7 @@ full:media.nownews.com
 media.zestyio.com
 mediadelivery.net
 monitor.azure.com
+full:n.approveit.today
 full:netlify.apollo.io
 notion-static.com
 full:ocsp.comodoca.com
@@ -4388,6 +4390,7 @@ full:player-frontend.cnevids.com
 full:prego-cache.prod.sketch.com
 full:public-pages.cbinsights.com
 full:resources-live.sketch.cloud
+full:rum-ingest.us1.signalfx.com
 full:safebrowsing.googleapis.com
 full:sessions-bugsnag.docker.com
 siteintercept.qualtrics.com
@@ -4397,6 +4400,7 @@ full:static-homepage-en.pluto.tv
 full:static-mh.content.disney.io
 full:static-production.npmjs.com
 full:static-webfonts.myfonts.com
+full:static.acm.account.sony.com
 full:static.captcha-delivery.com
 full:sts.online.visualstudio.com
 full:tvdownloaddw-a.akamaihd.net
@@ -4763,3 +4767,4 @@ regexp:^fastly\-.*\.allmovie\.com$
 regexp:^cdn.*\.porn87\.com$
 regexp:^cdn.*\.pornhost\.com$
 regexp:^cdn.*\.boysfood\.com$
+regexp:^rum\-ingest\..*\.signalfx\.com$
