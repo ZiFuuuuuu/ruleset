@@ -320,6 +320,7 @@ full:p.sda1.dev
 pagecdn.io
 pgimgs.com
 phncdn.com
+full:pic2.99.co
 pinimg.com
 pixhost.to
 full:pixoraa.cc
@@ -1420,6 +1421,7 @@ full:api.bintray.com
 full:api.weather.com
 app.gitbook.com
 full:asset.chase.com
+full:assets-v2.99.co
 full:assets.about.me
 full:assets.bbhub.io
 full:assets.canny.io
@@ -1427,6 +1429,7 @@ full:assets.cello.so
 full:assets.clibo.tw
 full:assets.game8.co
 full:assets.goat.com
+full:assets.grab.com
 full:assets.habr.com
 full:assets.jable.tv
 full:assets.kagi.com
@@ -2304,6 +2307,7 @@ full:image.ap-mail.org
 full:image.civitai.com
 full:image.comicbz.com
 full:image.freepik.com
+full:image.gameapps.hk
 full:image.mgstage.com
 full:image.prntscr.com
 full:image.xmanhua.net
@@ -2747,6 +2751,7 @@ full:static.snaptube.in
 full:static.srcspot.com
 full:static.svc.litv.tv
 full:static.tp-link.com
+full:static.truemed.com
 full:static.uptimia.com
 full:static.workday.com
 full:static.xgroovy.com
@@ -2810,6 +2815,7 @@ full:archive.mozilla.org
 full:assets-cdn.jable.tv
 full:assets-cdn.porn.com
 full:assets-docs.dify.ai
+full:assets-static.99.co
 full:assets-www.xbox.com
 full:assets.adobedtm.com
 full:assets.airbuddy.app
@@ -3979,6 +3985,7 @@ full:s3media.squarespace.com
 full:safebrowsing.google.com
 sciencedirectassets.com
 full:screenshots.webflow.com
+full:scribe-web-sdk.grab.com
 full:scripts.dailymail.co.uk
 full:server.arcgisonline.com
 full:static-assets.juksy.com
@@ -4415,6 +4422,7 @@ full:static-production.npmjs.com
 full:static-webfonts.myfonts.com
 full:static.acm.account.sony.com
 full:static.captcha-delivery.com
+full:static1.straitstimes.com.sg
 full:sts.online.visualstudio.com
 full:tvdownloaddw-a.akamaihd.net
 full:typescript.visualstudio.com
@@ -4680,6 +4688,7 @@ full:edge-cloud-resource-static.azureedge.net
 full:edgecdn-embza6g8cacagcbn.z01.azurefd.net
 full:cdn.mcauto-images-production.sendgrid.net
 full:cf-images.ap-northeast-1.prod.boltdns.net
+full:cf-images.ap-southeast-1.prod.boltdns.net
 full:marfeelexperimentsexperienceengine.mrf.io
 full:prod-streaming-video-msn-com.akamaized.net
 full:talon-website-prod.ecosec.on.epicgames.com
@@ -4782,3 +4791,4 @@ regexp:^cdn.*\.porn87\.com$
 regexp:^cdn.*\.pornhost\.com$
 regexp:^cdn.*\.boysfood\.com$
 regexp:^rum\-ingest\..*\.signalfx\.com$
+regexp:^cf\-images\..*\.prod\.boltdns\.net$
