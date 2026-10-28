@@ -130,7 +130,6 @@ fuwamofu.com
 full:gotest.tools
 full:lib.ugent.be
 full:mir.linux.kg
-full:mirror.0x.sg
 full:mirror.5i.fi
 full:mirror.a1.mk
 mirror.ac.ke
@@ -827,7 +826,6 @@ full:mirror.isoc.org.il
 full:mirror.karneval.cz
 full:mirror.katapult.io
 full:mirror.liquidrp.de
-full:mirror.marcusn.net
 full:mirror.papua.go.id
 full:mirror.previder.nl
 full:mirror.reverse.net
@@ -1013,6 +1011,7 @@ full:mirrors.xtom.com.hk
 full:opensource.xtdv.net
 full:packages.termux.dev
 full:pubmirror.plutex.de
+full:registry.gitlab.com
 full:release.runcloud.io
 full:releases.claude.com
 full:replicate.npmjs.com
@@ -1275,7 +1274,6 @@ full:downloads.majestic.com
 full:downloads.portainer.io
 full:enterprise.proxmox.com
 full:fdroid.tetaneutral.net
-full:ftp.tsukuba.wide.ad.jp
 full:ftpmirror1.infania.net
 full:gog-cdn-fastly.gog.com
 full:i18n.prismlauncher.org
@@ -1345,7 +1343,6 @@ full:vfat.classicreload.com
 full:vn-mirrors.techhost.vn
 wup.eshop.nintendo.net
 full:www.gutscheinrausch.de
-full:www2.aomeisoftware.com
 full:apache.ip-connect.vn.ua
 full:apache.miloslavbrada.cz
 full:archive.raspberrypi.com
