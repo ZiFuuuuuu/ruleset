@@ -365,7 +365,7 @@ def main():
     non_ip_files = list_remote_files("non_ip")
     ip_files = list_remote_files("ip")
 
-    # 回退列表（基于 2026-08-04 的完整目录）
+    # 回退列表
     if not domainset_files:
         domainset_files = [
             "apple_cdn.conf", "cdn.conf", "download.conf", "game-download.conf",
@@ -377,7 +377,7 @@ def main():
         non_ip_files = [
             "ai.conf", "apple_cdn.conf", "apple_cn.conf", "apple_intelligence.conf",
             "apple_services.conf", "cdn.conf", "cloudmounter.conf", "direct.conf",
-            "domestic.conf", "download.conf", "gitlab.conf", "global.conf",
+            "domestic.conf", "domestic_cdn.conf","download.conf", "gitlab.conf", "global.conf",
             "global_plus.conf", "lan.conf", "microsoft.conf", "microsoft_cdn.conf",
             "my_direct.conf", "my_git.conf", "my_plus.conf", "my_proxy.conf",
             "my_reject.conf", "my_tw.conf", "my_us.conf", "neteasemusic.conf",
