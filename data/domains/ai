@@ -21,6 +21,7 @@ chatgpt.site
 deepmind.com
 full:ai.google.dev
 anthropic.com
+full:cloud.zed.dev
 gemini.google
 oaistatic.com
 full:openrouter.ai
@@ -37,6 +38,7 @@ full:server.codeium.com
 full:aida.googleapis.com
 aistudio.google.com
 generativeai.google
+full:aicode.googleapis.com
 full:inference.codeium.com
 makersuite.google.com
 notebooklm.google.com
@@ -51,5 +53,6 @@ full:alkalicore-pa.clients6.google.com
 full:daily-cloudcode-pa.googleapis.com
 generativelanguage.googleapis.com
 proactivebackend-pa.googleapis.com
+full:daily-cloudcode-pa.sandbox.googleapis.com
 keyword:openai
 keyword:alkalimakersuite-pa.clients6.google.com
