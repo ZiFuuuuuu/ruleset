@@ -95,6 +95,14 @@
         "name": "telegram",
         "uri": "/home/runner/work/ruleset/ruleset/data/ips/telegram.txt"
       }
+    },
+    {
+      "type": "text",
+      "action": "add",
+      "args": {
+        "name": "teleproto",
+        "uri": "/home/runner/work/ruleset/ruleset/data/ips/teleproto.txt"
+      }
     }
   ],
   "output": [
