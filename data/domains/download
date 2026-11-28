@@ -116,7 +116,6 @@ full:ftp.daum.net
 full:ftp.eq.uc.pt
 full:ftp.funet.fi
 full:ftp.is.co.za
-full:ftp.ktug.org
 full:ftp.lanet.kr
 full:ftp.linux.cz
 full:ftp.linux.it
@@ -219,6 +218,7 @@ packagist.org
 full:repo.xtom.com
 full:repository.su
 s3.yandex.net
+sbcmirror.org
 full:sft.if.usp.br
 full:ubuntu.dts.mg
 full:ubuntu.nic.cz
@@ -342,6 +342,7 @@ full:apache.hippo.nl
 full:apache.is.co.za
 full:apache.saix.net
 full:apache.uvigo.es
+full:apt.armbian.com
 full:apt.izzysoft.de
 full:c.1password.com
 full:cdn.altstore.io
@@ -464,6 +465,7 @@ full:archlinux.nic.cz
 artifacts.ui.com
 full:aus5.mozilla.org
 full:b2.mcarchive.net
+full:beta.armbian.com
 full:boot.netboot.xyz
 full:cdimage.kali.org
 cdn.blizzard.com
@@ -762,7 +764,6 @@ full:cdimage.ubuntu.com
 full:cisco.yuntu.com.tw
 full:cpan-mirror.rbc.ru
 full:cpan.dcc.uchile.cl
-full:cpan.mines-albi.fr
 full:ctan.dcc.uchile.cl
 full:ctan.math.utah.edu
 full:ctan.mines-albi.fr
@@ -797,6 +798,7 @@ full:ftp.tu-chemnitz.de
 ftp2.de.debian.org
 full:ftpmirror.your.org
 full:ftpserv.tudelft.nl
+full:github.armbian.com
 full:index.rubygems.org
 full:maven.fabricmc.net
 full:maven.is-quite.gay
@@ -1451,10 +1453,8 @@ full:mirror.debian.ikoula.com
 full:mirror.digitaloceans.dev
 full:mirror.dimensiondata.com
 full:mirror.grid.uchicago.edu
-full:mirror.library.ucy.ac.cy
 mirror.liquidtelecom.com
 full:mirror.mythic-beasts.com
-full:mirror.netcologne.de.org
 full:mirror.ubuntu.ikoula.com
 full:mirror.unix-solutions.be
 full:mirror.us.mirhosting.net
@@ -1593,7 +1593,6 @@ full:mirror.bharatdatacenter.com
 full:mirror.domainhizmetleri.com
 full:mirror.improve.nordlo.cloud
 full:mirror.retentionrange.co.bw
-full:mirror.thunderhosting.cloud
 full:mirror.united-gameserver.de
 full:mirrors.advancedhosters.com
 oss-ap-south-1.aliyuncs.com

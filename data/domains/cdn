@@ -1024,7 +1024,6 @@ picsum.photos
 place-hold.it
 full:pomf2.lain.la
 full:r2.dejavu.moe
-full:r2cdn.c7d.dev
 randomuser.me
 rawgithub.com
 rcsobjects.it
@@ -1341,7 +1340,6 @@ full:s1.divhunt.com
 full:s3.2233778.xyz
 sbcdnvideo.com
 full:scache.vzw.com
-full:scdn.clerk.com
 full:sdata.ndtv.com
 full:sdk.qikify.com
 sentry-cdn.com
@@ -1369,7 +1367,6 @@ full:static.reo.dev
 full:static.snyk.io
 full:static.toss.im
 full:static.xns.one
-full:static.yfsp.tv
 full:stc.utdstc.com
 sthlstatic.com
 full:stream.mux.com
@@ -1642,7 +1639,6 @@ net.anydesk.com
 nftstorage.link
 full:object.innei.in
 full:objects.hit.moe
-full:pacdn.500px.org
 parastorage.com
 full:pcz.javidol.org
 permaweb.eu.org
@@ -1873,7 +1869,6 @@ dc-telemetry.net
 directupload.net
 dockerstatic.com
 dreamscape.cloud
-full:drscdn.500px.org
 full:e.deviantart.net
 full:embed.lantern.io
 full:embed.reddit.com
@@ -2037,7 +2032,6 @@ s3.wasabisys.com
 full:s8.maxstream.org
 scribdassets.com
 full:sdk.customfit.ai
-full:segapi.clerk.com
 full:shots.codepen.io
 sny.monosnap.com
 full:static.arxiv.org
@@ -2690,7 +2684,6 @@ full:proxy.spigotmc.org
 full:public.hare200.com
 full:public.popclip.app
 quip-marketing.com
-full:r2cdn.corespeed.io
 full:reader.readmoo.com
 full:registry.oomol.com
 replicate.delivery
@@ -3450,6 +3443,7 @@ full:cdn.freebiesupply.com
 full:cdn.heapanalytics.com
 full:cdn.joincommunity.xyz
 cdn.printfriendly.com
+full:cdn.protect.clerk.com
 full:cdn.prowritingaid.com
 full:cdn.shoppinggives.com
 full:cdn.simplelocalize.io
@@ -3543,7 +3537,6 @@ full:media.cleanshot.cloud
 full:media.games.dmm.co.jp
 full:media.gettyimages.com
 full:media.graphassets.com
-full:media.hentaifreak.org
 full:media.identity.ui.com
 full:media.invisioncic.com
 full:media.istockphoto.com
@@ -3875,7 +3868,6 @@ full:assets.clever-cloud.com
 full:assets.clickfunnels.com
 assets.digitalocean.com
 full:assets.lemonsqueezy.com
-full:assets.mcp.corespeed.io
 full:assets.science.nasa.gov
 full:assets.singaporeair.com
 full:assets.streamlinehq.com
@@ -4132,9 +4124,7 @@ full:segment.digitalocean.com
 full:service-icons.zeabur.com
 settings.crashlytics.com
 full:sf-coze-web-cdn.coze.com
-full:showcase.abovemarket.com
 full:sp-spiegel-de.spiegel.de
-full:spotlightimage.biggo.com
 full:static-assets.mapbox.com
 full:static-assets.vinted.com
 full:static-forms.klaviyo.com
@@ -4259,7 +4249,6 @@ full:tiles.maps.opensearch.org
 full:trekcdnprod.azureedge.net
 full:tuf-repo-cdn.sigstore.dev
 full:ubistatic2-a.akamaihd.net
-full:unlimited-cdn.waifu2x.net
 full:vz-2222604c-50b.b-cdn.net
 full:vz-c0fe498e-5ab.b-cdn.net
 full:web-assets.esetstatic.com
@@ -4379,7 +4368,6 @@ full:encrypted-vtbn0.gstatic.com
 full:encrypted-vtbn1.gstatic.com
 full:encrypted-vtbn2.gstatic.com
 full:encrypted-vtbn3.gstatic.com
-frame.claudeusercontent.com
 full:images-eds-ssl.xboxlive.com
 full:images-ext-1.discordapp.net
 full:images-ext-2.discordapp.net
@@ -4577,6 +4565,7 @@ full:android-safebrowsing.google.com
 full:bookface-static.ycombinator.com
 full:brand-assets.cne.ngc.nvidia.com
 full:bunnycdn-video-assets.b-cdn.net
+full:cdn-resize-prod-com.500px.cloud
 full:cdn-widgetsrepository.yotpo.com
 full:cdn.playersupport.riotgames.com
 full:cdn.techcommunity.microsoft.com
